@@ -1,0 +1,103 @@
+{% extends 'payments/base4.html' %}
+{% load humanize %}
+
+{% block title %}{{ company.name }} - Monthly Payments{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    body {
+        background-color: #f5f5f5; /* Light gray background */
+    }
+
+    .page-header {
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse; /* Remove table borders */
+    }
+
+    .table th,
+    .table td {
+        padding: 1rem 1.5rem;
+        border: 1px solid #e0e0e0; /* Add borders to table cells */
+    }
+
+    .table thead th {
+        background-color: #e0e0e0; /* Light gray header */
+        color: #555;
+        text-align: left;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f8f8f8; /* Alternate row colors */
+    }
+
+    .table tbody .due {
+        color: red;
+        font-weight: bold;
+    }
+
+    .table tbody .partial {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .table tbody .paid {
+        color: green;
+        font-weight: bold;
+    }
+
+    .table-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: inline-block;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+    }
+
+    .btn-back {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>
+            {{ company.name }} - Monthly Payment Statuses
+            <i class="fas fa-table table-icon" aria-hidden="true"></i> </h1>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Expected Amount</th>
+                <th>Paid Amount</th>
+                <th>Remaining Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in monthly_payment_statuses %}
+                <tr>
+                    <td>{{ status.month_name }}</td>
+                    <td>{{ status.year }}</td>
+                    <td>${{ status.expected|intcomma }}</td>
+                    <td>${{ status.paid|intcomma }}</td>
+                    <td>${{ status.remaining|intcomma }}</td>
+                    <td class="{% if status.status == 'UNPAID' %}due{% elif status.status == 'PARTIALLY_PAID' %}partial{% else %}paid{% endif %}">
+                        <i class="fas fa-circle table-icon" aria-hidden="true"></i> {{ status.status }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'payments:company-list' %}" class="btn btn-secondary btn-back">Back to Companies</a>
+{% endblock %}

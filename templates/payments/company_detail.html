@@ -1,0 +1,306 @@
+{# templates/payments/company_detail.html #}
+{% extends 'payments/base4.html' %}
+
+{% block title %}{{ company.name }} - Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Company Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="mb-0">{{ company.name }}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'payments:company-list' %}">Companies</a></li>
+                        <li class="breadcrumb-item active">{{ company.name }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Umumiy holat</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-primary text-white h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">Kelishuv summasi</h6>
+                                    <h3 class="mb-0">${{ total_to_pay|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">Umumiy to'landi</h6>
+                                    <h3 class="mb-0">${{ total_paid|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-warning h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">To'lanishi kerak</h6>
+                                    <h3 class="mb-0">${{ remaining_balance|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pragress</h6>
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ payment_percentage }}%;" 
+                                             aria-valuenow="{{ payment_percentage }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">{{ payment_percentage|floatformat:1 }}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Information -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Company Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <strong><i class="fas fa-envelope me-2"></i>Email:</strong>
+                        <span class="ms-2">{{ company.email }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong><i class="fas fa-phone me-2"></i>Contact Number:</strong>
+                        <span class="ms-2">{{ company.contact_number }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong><i class="fas fa-map-marker-alt me-2"></i>Address:</strong>
+                        <span class="ms-2">{{ company.address }}</span>
+                    </div>
+                    <div class="mb-0">
+                        <strong><i class="fas fa-calendar me-2"></i>Registration Date:</strong>
+                        <span class="ms-2">{{ company.created_at|date:"F j, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unpaid Months Section -->
+    {% if unpaid_months %}
+    <div class="card shadow mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Unpaid/Partially Paid Months
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Arrangement</th>
+                            <th>Month</th>
+                            <th>Due Date</th>
+                            <th>Expected Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Missing Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month in unpaid_months %}
+                            <tr>
+                                <td>Arrangement #{{ month.arrangement_id }}</td>
+                                <td>Month {{ month.month_number }}</td>
+                                <td>{{ month.due_date|date:"M j, Y" }}</td>
+                                <td>${{ month.expected_amount|floatformat:2 }}</td>
+                                <td>${{ month.paid_amount|floatformat:2 }}</td>
+                                <td class="text-danger">${{ month.missing_amount|floatformat:2 }}</td>
+                                <td>
+                                    {% if month.paid_amount == 0 %}
+                                        <span class="badge bg-danger">Unpaid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Partially Paid</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Payment Arrangements Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Payment Arrangements</h5>
+            <a href="{% url 'payments:add-arrangement' %}?company={{ company.id }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add New Arrangement
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for arrangement in arrangements %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100 {% if arrangement.is_active %}border-success{% else %}border-secondary{% endif %}">
+                            <div class="card-header {% if arrangement.is_active %}bg-success{% else %}bg-secondary{% endif %} text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Arrangement #{{ arrangement.id }}</h6>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ arrangement.id }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <strong>Monthly Amount:</strong>
+                                    <span class="float-end">${{ arrangement.monthly_amount|floatformat:2 }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Number of Months:</strong>
+                                    <span class="float-end">{{ arrangement.number_of_months }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Total Amount:</strong>
+                                    <span class="float-end">${{ arrangement.total_amount|floatformat:2 }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Start Date:</strong>
+                                    <span class="float-end">{{ arrangement.start_date|date:"M j, Y" }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>End Date:</strong>
+                                    <span class="float-end">{{ arrangement.end_date|date:"M j, Y"|default:"Ongoing" }}</span>
+                                </div>
+                                <div class="mb-0">
+                                    <strong>Status:</strong>
+                                    <span class="float-end">
+                                        <span class="badge {% if arrangement.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {% if arrangement.is_active %}Active{% else %}Inactive{% endif %}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ arrangement.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Arrangement</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this payment arrangement?</p>
+                                    <div class="alert alert-info">
+                                        <p class="mb-2"><strong>Arrangement Details:</strong></p>
+                                        <ul class="mb-0">
+                                            <li>Monthly Amount: ${{ arrangement.monthly_amount|floatformat:2 }}</li>
+                                            <li>Number of Months: {{ arrangement.number_of_months }}</li>
+                                            <li>Total Amount: ${{ arrangement.total_amount|floatformat:2 }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="alert alert-danger mb-0">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        This action cannot be undone.
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <a href="{% url 'payments:delete-arrangement' arrangement.id %}" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt me-2"></i>Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No payment arrangements set up yet.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History Section -->
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Payment History</h5>
+            <a href="{% url 'payments:add-payment' %}?company={{ company.id }}" class="btn btn-success">
+                <i class="fas fa-plus me-2"></i>Record New Payment
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Arrangement</th>
+                            <th>Month</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.payment_date|date:"M j, Y" }}</td>
+                                <td>Arrangement #{{ payment.arrangement.id }}</td>
+                                <td>Month {{ payment.month_number }}</td>
+                                <td>${{ payment.amount_paid|floatformat:2 }}</td>
+                                <td>{{ payment.payment_method }}</td>
+                                <td>
+                                    <span class="badge {% if payment.status == 'COMPLETED' %}bg-success
+                                                      {% elif payment.status == 'PENDING' %}bg-warning text-dark
+                                                      {% elif payment.status == 'PARTIAL' %}bg-warning text-dark
+                                                      {% elif payment.status == 'UNPAID' %}bg-danger
+                                                      {% else %}bg-danger{% endif %}">
+                                        {{ payment.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ payment.notes|truncatechars:30|default:"-" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No payments recorded yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

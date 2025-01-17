@@ -1,0 +1,330 @@
+{# templates/payments/company_list.html #}
+{#{% extends 'payments/base4.html' %}#}
+{##}
+{#{% block title %}Companies - Payment System{% endblock %}#}
+{##}
+{#{% block extra_css %}#}
+{#<style>#}
+{#    .page-header {#}
+{#        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);#}
+{#        color: white;#}
+{#        border-radius: 15px;#}
+{#        padding: 2rem;#}
+{#        margin-bottom: 2rem;#}
+{#        box-shadow: 0 4px 20px rgba(26, 35, 126, 0.15);#}
+{#    }#}
+{##}
+{#    .stats-card {#}
+{#        background: white;#}
+{#        border-radius: 10px;#}
+{#        padding: 1rem;#}
+{#        box-shadow: 0 2px 4px rgba(0,0,0,0.05);#}
+{#        transition: transform 0.3s ease, box-shadow 0.3s ease;#}
+{#    }#}
+{##}
+{#    .company-card {#}
+{#        background: white;#}
+{#        border-radius: 15px;#}
+{#        overflow: hidden;#}
+{#        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),#}
+{#                    0 2px 4px -1px rgba(0,0,0,0.06);#}
+{#        transition: all 0.3s ease;#}
+{#        margin-bottom: 1.5rem;#}
+{#    }#}
+{##}
+{#    .company-card:hover {#}
+{#        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),#}
+{#                    0 4px 6px -2px rgba(0,0,0,0.05);#}
+{#    }#}
+{##}
+{#    .company-info {#}
+{#        background: #f8fafc;#}
+{#        border-right: 1px solid #e2e8f0;#}
+{#        padding: 1.5rem;#}
+{#    }#}
+{##}
+{#    .company-details {#}
+{#        padding: 1.5rem;#}
+{#    }#}
+{##}
+{#    .badge-status {#}
+{#        padding: 0.5rem 1rem;#}
+{#        border-radius: 6px;#}
+{#        font-weight: 500;#}
+{#        font-size: 0.875rem;#}
+{#    }#}
+{##}
+{#    .badge-paid {#}
+{#        background-color: #d4edda;#}
+{#        color: #155724;#}
+{#    }#}
+{##}
+{#    .badge-partial {#}
+{#        background-color: #fff3cd;#}
+{#        color: #856404;#}
+{#    }#}
+{##}
+{#    .badge-unpaid {#}
+{#        background-color: #f8d7da;#}
+{#        color: #721c24;#}
+{#    }#}
+{##}
+{#    .detail-btn {#}
+{#        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);#}
+{#        border: none;#}
+{#        color: white;#}
+{#        padding: 0.5rem 1rem;#}
+{#        border-radius: 6px;#}
+{#        transition: all 0.3s ease;#}
+{#        text-decoration: none;#}
+{#    }#}
+{##}
+{#    .detail-btn:hover {#}
+{#        transform: translateY(-2px);#}
+{#        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);#}
+{#        color: white;#}
+{#    }#}
+{##}
+{#    .info-label {#}
+{#        color: #718096;#}
+{#        font-size: 0.875rem;#}
+{#        margin-bottom: 0.25rem;#}
+{#    }#}
+{##}
+{#    .info-value {#}
+{#        color: #2d3748;#}
+{#        font-weight: 500;#}
+{#    }#}
+{#</style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    {% for company_info in companies %}#}
+{#    <div class="company-card">#}
+{#        <div class="stats-card">#}
+{#            <div class="stat-item">#}
+{#                <h6>Kelishuv summasi</h6> #}
+{#                <div class="value">${{ company_info.total_to_pay|floatformat:2 }}</div>#}
+{#            </div>#}
+{#            <div class="stat-item">#}
+{#                <h6>Umumiy to'landi</h6>#}
+{#                <div class="value">${{ company_info.total_paid|floatformat:2 }}</div>#}
+{#            </div>#}
+{#            <div class="stat-item">#}
+{#                <h6>To'lanishi kerak</h6>#}
+{#                <div class="value">${{ company_info.remaining_balance|floatformat:2 }}</div>#}
+{#            </div>#}
+{#            <div class="stat-item">#}
+{#                <h6>Progress</h6>#}
+{#                <div class="progress">#}
+{#                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ company_info.payment_percentage }}%;" aria-valuenow="{{ company_info.payment_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        </div>#}
+{#    {% empty %}#}
+{#    {% endfor %}#}
+{#</div>#}
+{#{% endblock %}#}
+
+
+{% extends 'payments/base4.html' %}
+{% load humanize %}
+
+{% block title %}Companies - Payment System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .page-header {
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .company-card {
+        background-color: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        margin-bottom: 2.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .company-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #f0f0f5;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .stat-item {
+        text-align: left;
+    }
+
+    .stat-item i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #6c757d;
+    }
+
+    .stat-item h6 {
+        color: #495057;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .stat-item .value {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #343a40;
+    }
+
+    .progress {
+        height: 8px;
+        border-radius: 4px;
+        margin-top: 0.75rem;
+        background-color: #e0e0e0;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 4px;
+        background-color: #007bff;
+        transition: width 0.6s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.75rem;
+    }
+
+    .company-info {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e9ecef;
+        background-color: #fff;
+        font-size: 0.85rem;
+    }
+
+    .info-item {
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item strong {
+        font-weight: 500;
+        margin-right: 0.25rem;
+        color: #495057;
+    }
+    .card-actions {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+    .card-actions .btn{
+        margin: 0 5px;
+    }
+
+    .due {
+        color: red;
+        font-weight: bold;
+    }
+
+    .not-due {
+        color: green;
+        font-weight: bold;
+    }
+
+    .partial {
+        color: orange;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Companies</h1>
+    </div>
+
+    <div class="row">
+        {% if companies %}
+            {% for company_info in companies %}
+                <div class="col-md-6">
+                    <div class="company-card">
+                        <div class="card-header">
+                            <h3>{{ company_info.company.name }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="stat-item">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                <h6>Total Agreement</h6>
+                                <div class="value">${{ company_info.total_to_pay|intcomma }}</div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <h6>Total Paid</h6>
+                                <div class="value">${{ company_info.total_paid|intcomma }}</div>
+                            </div>
+{#                            <div class="stat-item">#}
+{#                                <i class="fas fa-chart-line"></i>#}
+{#                                <h6>Payment Progress</h6>#}
+{#                                <div class="progress">#}
+{#                                    <div class="progress-bar" role="progressbar" style="width: {{ company_info.payment_percentage }}%;" aria-valuenow="{{ company_info.payment_percentage }}" aria-valuemin="0" aria-valuemax="100">#}
+{#                                        {{ company_info.payment_percentage|floatformat }}%#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+                            <!-- Inside the card-body div, update the last stat-item -->
+<div class="stat-item">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h6>Current Due</h6>
+    <div class="value {% if company_info.current_due > 0 %}due{% else %}not-due{% endif %}">
+        ${{ company_info.current_due|intcomma }}
+    </div>
+</div>
+                        </div>
+                        <div class="company-info">
+                            {% if company_info.company.address %}
+                                <div class="info-item"><strong>Address:</strong> {{ company_info.company.address }}</div>
+                            {% endif %}
+                            {% if company_info.company.phone_number %}
+                                <div class="info-item"><strong>Phone:</strong> {{ company_info.company.phone_number }}</div>
+                            {% endif %}
+                            {% if company_info.company.email %}
+                                <div class="info-item"><strong>Email:</strong> {{ company_info.company.email }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="card-actions">
+                            <a href="{% url 'payments:company-detail' company_info.company.pk %}" class="btn btn-primary">View Details</a>
+                            <a href="{% url 'payments:company-monthly-payments' company_info.company.pk %}" class="btn btn-info">View Monthly Payments</a>
+                             <a href="{% url 'payments:delete-company' company_info.company.pk %}" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Delete
+    </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No companies found.</p>
+        {% endif %}
+    </div>
+{% endblock %}
