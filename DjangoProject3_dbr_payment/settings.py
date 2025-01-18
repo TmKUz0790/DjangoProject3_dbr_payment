@@ -36,14 +36,13 @@ LOGOUT_REDIRECT_URL = '/login/'
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'dbr_payment',  # Try using just the app name instead of the config class
+    'dbr_payment.apps.DbrPaymentConfig',
     'corsheaders',
     'rest_framework'
 ]
