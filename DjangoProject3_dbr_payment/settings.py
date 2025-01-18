@@ -36,22 +36,37 @@ LOGOUT_REDIRECT_URL = '/login/'
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'dbr_payment.apps.DbrPaymentConfig',
+    'dbr_payment',  # Try using just the app name instead of the config class
+    'corsheaders',
     'rest_framework'
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN = '7836423461:AAEBXWfemseW5LTMkvlIqMmQuWM3VkIGiz8'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    'https://djangoproject3dbrpayment-production.up.railway.app'
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://djangoproject3dbrpayment-production.up.railway.app',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000'
+
+
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
