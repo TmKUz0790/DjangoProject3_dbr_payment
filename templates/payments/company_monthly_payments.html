@@ -1,3 +1,155 @@
+{##}
+{#{% extends 'payments/base4.html' %}#}
+{#{% load humanize %}#}
+{##}
+{#{% block title %}{{ company.name }} - Monthly Payments{% endblock %}#}
+{##}
+{#{% block extra_css %}#}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">#}
+{#<style>#}
+{#    body {#}
+{#        background-color: #f5f5f5;#}
+{#    }#}
+{##}
+{#    .page-header {#}
+{#        padding: 2rem 0;#}
+{#        margin-bottom: 3rem;#}
+{#        border-bottom: 1px solid #e0e0e0;#}
+{#    }#}
+{##}
+{#    .payment-cards {#}
+{#        display: grid;#}
+{#        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));#}
+{#        gap: 1.5rem;#}
+{#        padding: 1rem;#}
+{#    }#}
+{##}
+{#    .payment-card {#}
+{#        background: white;#}
+{#        border-radius: 8px;#}
+{#        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);#}
+{#        padding: 1.5rem;#}
+{#    }#}
+{##}
+{#    .payment-card h3 {#}
+{#        margin: 0 0 1rem 0;#}
+{#        padding-bottom: 0.5rem;#}
+{#        border-bottom: 2px solid #e0e0e0;#}
+{#        display: flex;#}
+{#        justify-content: space-between;#}
+{#        align-items: center;#}
+{#    }#}
+{##}
+{#    .payment-details {#}
+{#        display: grid;#}
+{#        grid-template-columns: 1fr;#}
+{#        gap: 0.75rem;#}
+{#    }#}
+{##}
+{#    .payment-item {#}
+{#        display: flex;#}
+{#        justify-content: space-between;#}
+{#        padding: 0.5rem 0;#}
+{#        border-bottom: 1px solid #f0f0f0;#}
+{#    }#}
+{##}
+{#    .payment-item:last-child {#}
+{#        border-bottom: none;#}
+{#    }#}
+{##}
+{#    .payment-label {#}
+{#        color: #666;#}
+{#        font-weight: 500;#}
+{#    }#}
+{##}
+{#    .payment-value {#}
+{#        font-weight: 600;#}
+{#    }#}
+{##}
+{#    .status-indicator {#}
+{#        padding: 0.5rem 1rem;#}
+{#        border-radius: 4px;#}
+{#        font-weight: bold;#}
+{#        text-align: center;#}
+{#        margin-top: 1rem;#}
+{#    }#}
+{##}
+{#    .status-due {#}
+{#        background-color: #ffebee;#}
+{#        color: #d32f2f;#}
+{#    }#}
+{##}
+{#    .status-partial {#}
+{#        background-color: #fff3e0;#}
+{#        color: #f57c00;#}
+{#    }#}
+{##}
+{#    .status-paid {#}
+{#        background-color: #e8f5e9;#}
+{#        color: #2e7d32;#}
+{#    }#}
+{##}
+{#    .btn-back {#}
+{#        margin: 2rem 1rem;#}
+{#        display: inline-block;#}
+{#        padding: 0.75rem 1.5rem;#}
+{#        background-color: #6c757d;#}
+{#        color: white;#}
+{#        text-decoration: none;#}
+{#        border-radius: 4px;#}
+{#        transition: background-color 0.2s;#}
+{#    }#}
+{##}
+{#    .btn-back:hover {#}
+{#        background-color: #5a6268;#}
+{#        color: white;#}
+{#        text-decoration: none;#}
+{#    }#}
+{#</style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="page-header">#}
+{#        <h1>#}
+{#            {{ company.name }} - Monthly Payment Statuses#}
+{#            <i class="fas fa-credit-card table-icon" aria-hidden="true"></i>#}
+{#        </h1>#}
+{#    </div>#}
+{##}
+{#    <div class="payment-cards">#}
+{#        {% for status in monthly_payment_statuses %}#}
+{#            <div class="payment-card">#}
+{#                <h3>#}
+{#                    {{ status.month_name }} {{ status.year }}#}
+{#                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>#}
+{#                </h3>#}
+{#                <div class="payment-details">#}
+{#                    <div class="payment-item">#}
+{#                        <span class="payment-label">Expected Amount</span>#}
+{#                        <span class="payment-value">${{ status.expected|intcomma }}</span>#}
+{#                    </div>#}
+{#                    <div class="payment-item">#}
+{#                        <span class="payment-label">Paid Amount</span>#}
+{#                        <span class="payment-value">${{ status.paid|intcomma }}</span>#}
+{#                    </div>#}
+{#                    <div class="payment-item">#}
+{#                        <span class="payment-label">Remaining Amount</span>#}
+{#                        <span class="payment-value">${{ status.remaining|intcomma }}</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="status-indicator {% if status.status == 'UNPAID' %}status-due{% elif status.status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">#}
+{#                    <i class="fas fa-circle" aria-hidden="true"></i>#}
+{#                    {{ status.status }}#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{##}
+{#    <a href="{% url 'payments:company-list' %}" class="btn-back">#}
+{#        <i class="fas fa-arrow-left" aria-hidden="true"></i>#}
+{#        Back to Companies#}
+{#    </a>#}
+{#{% endblock %}#}
 {% extends 'payments/base4.html' %}
 {% load humanize %}
 
@@ -7,61 +159,156 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
     body {
-        background-color: #f5f5f5; /* Light gray background */
+        background-color: #f5f5f5;
     }
 
     .page-header {
         padding: 2rem 0;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         border-bottom: 1px solid #e0e0e0;
     }
 
-    .table {
-        width: 100%;
-        border-collapse: collapse; /* Remove table borders */
+    .summary-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin: 0 1rem 2rem 1rem;
     }
 
-    .table th,
-    .table td {
-        padding: 1rem 1.5rem;
-        border: 1px solid #e0e0e0; /* Add borders to table cells */
+    .summary-card h2 {
+        margin: 0 0 1.5rem 0;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-    .table thead th {
-        background-color: #e0e0e0; /* Light gray header */
-        color: #555;
-        text-align: left;
+    .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
     }
 
-    .table tbody tr:nth-child(even) {
-        background-color: #f8f8f8; /* Alternate row colors */
+    .summary-stat {
+        text-align: center;
+        padding: 1rem;
+        border-radius: 6px;
+        background-color: #f8f9fa;
     }
 
-    .table tbody .due {
-        color: red;
+    .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .stat-value.total {
+        color: #2196f3;
+    }
+
+    .stat-value.paid {
+        color: #2e7d32;
+    }
+
+    .stat-value.due {
+        color: #d32f2f;
+    }
+
+    .payment-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .payment-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+    }
+
+    .payment-card h3 {
+        margin: 0 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .payment-details {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .payment-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .payment-item:last-child {
+        border-bottom: none;
+    }
+
+    .payment-label {
+        color: #666;
+        font-weight: 500;
+    }
+
+    .payment-value {
+        font-weight: 600;
+    }
+
+    .status-indicator {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
         font-weight: bold;
+        text-align: center;
+        margin-top: 1rem;
     }
 
-    .table tbody .partial {
-        color: orange;
-        font-weight: bold;
+    .status-due {
+        background-color: #ffebee;
+        color: #d32f2f;
     }
 
-    .table tbody .paid {
-        color: green;
-        font-weight: bold;
+    .status-partial {
+        background-color: #fff3e0;
+        color: #f57c00;
     }
 
-    .table-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        display: inline-block;
-        margin-right: 0.5rem;
-        vertical-align: middle;
+    .status-paid {
+        background-color: #e8f5e9;
+        color: #2e7d32;
     }
 
     .btn-back {
-        margin-top: 1rem;
+        margin: 2rem 1rem;
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+        text-decoration: none;
     }
 </style>
 {% endblock %}
@@ -70,34 +317,63 @@
     <div class="page-header">
         <h1>
             {{ company.name }} - Monthly Payment Statuses
-            <i class="fas fa-table table-icon" aria-hidden="true"></i> </h1>
+            <i class="fas fa-credit-card table-icon" aria-hidden="true"></i>
+        </h1>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Expected Amount</th>
-                <th>Paid Amount</th>
-                <th>Remaining Amount</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for status in monthly_payment_statuses %}
-                <tr>
-                    <td>{{ status.month_name }}</td>
-                    <td>{{ status.year }}</td>
-                    <td>${{ status.expected|intcomma }}</td>
-                    <td>${{ status.paid|intcomma }}</td>
-                    <td>${{ status.remaining|intcomma }}</td>
-                    <td class="{% if status.status == 'UNPAID' %}due{% elif status.status == 'PARTIALLY_PAID' %}partial{% else %}paid{% endif %}">
-                        <i class="fas fa-circle table-icon" aria-hidden="true"></i> {{ status.status }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'payments:company-list' %}" class="btn btn-secondary btn-back">Back to Companies</a>
+    <div class="summary-card">
+        <h2>
+            <i class="fas fa-chart-pie" aria-hidden="true"></i>
+            Payment Summary
+        </h2>
+        <div class="summary-stats">
+            <div class="summary-stat">
+                <div class="stat-label">Total Expected Amount</div>
+                <div class="stat-value total">${{ total_expected|intcomma }}</div>
+            </div>
+            <div class="summary-stat">
+                <div class="stat-label">Total Paid Amount</div>
+                <div class="stat-value paid">${{ total_paid|intcomma }}</div>
+            </div>
+            <div class="summary-stat">
+                <div class="stat-label">Current Due Amount</div>
+                <div class="stat-value due">${{ current_due|intcomma }}</div>
+                <div class="stat-subtitle">(Past & Current Months Only)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-cards">
+        {% for status in monthly_payment_statuses %}
+            <div class="payment-card {% if status.is_past_or_current %}current-period{% else %}future-period{% endif %}">
+                <h3>
+                    {{ status.month_name }} {{ status.year }}
+                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                </h3>
+                <div class="payment-details">
+                    <div class="payment-item">
+                        <span class="payment-label">Expected Amount</span>
+                        <span class="payment-value">${{ status.expected|intcomma }}</span>
+                    </div>
+                    <div class="payment-item">
+                        <span class="payment-label">Paid Amount</span>
+                        <span class="payment-value">${{ status.paid|intcomma }}</span>
+                    </div>
+                    <div class="payment-item">
+                        <span class="payment-label">Remaining Amount</span>
+                        <span class="payment-value">${{ status.remaining|intcomma }}</span>
+                    </div>
+                </div>
+                <div class="status-indicator {% if status.status == 'UNPAID' %}status-due{% elif status.status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">
+                    <i class="fas fa-circle" aria-hidden="true"></i>
+                    {{ status.status }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'payments:company-list' %}" class="btn-back">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        Back to Companies
+    </a>
 {% endblock %}

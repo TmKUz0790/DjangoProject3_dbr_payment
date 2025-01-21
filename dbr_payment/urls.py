@@ -17,6 +17,8 @@ urlpatterns = [
     path('company/<int:pk>/delete/', views.delete_company, name='delete-company'),
     path('company/<int:pk>/monthly/', views.company_monthly_payments, name='company-monthly-payments'),
     path('api/company/monthly-payments/', views.company_monthly_payments_api, name='company-monthly-payments-api'),
+    path('payment/<int:pk>/delete/', views.delete_payment, name='delete-payment'),
+    path('all-companies-payments/', views.all_companies_payments, name='all-companies-payments'),
 ]
 
 
