@@ -452,56 +452,7 @@ def delete_company(request, pk):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Company
-import calendar
-from decimal import Decimal
-from django.db.models import Sum
 
-# def company_monthly_payments(request, pk):
-#     company = get_object_or_404(Company, pk=pk)
-#     arrangements = company.arrangements.filter(is_active=True)
-#     monthly_payment_statuses = []
-#     today = datetime.date.today()
-#     current_month = today.month
-#     current_year = today.year
-#     for arrangement in arrangements:
-#         first_arrangement_month = arrangement.start_date.month
-#         first_arrangement_year = arrangement.start_date.year
-#
-#         last_arrangement_month = (arrangement.start_date.month + arrangement.number_of_months - 1) % 12
-#         last_arrangement_year = arrangement.start_date.year + (arrangement.start_date.month + arrangement.number_of_months - 1) // 12
-#         if (first_arrangement_year < current_year or (first_arrangement_year == current_year and first_arrangement_month <= current_month)) and (last_arrangement_year > current_year or (last_arrangement_year == current_year and last_arrangement_month >= current_month)):
-#             if current_year > first_arrangement_year:
-#                 month_diff = (current_year - first_arrangement_year) * 12 + (current_month - first_arrangement_month) + 1
-#             else:
-#                 month_diff = current_month - first_arrangement_month + 1
-#             for month in range(1, arrangement.number_of_months + 1):
-#                 target_month = arrangement.start_date.month + (month - 1)
-#                 target_year = arrangement.start_date.year + (target_month - 1) // 12
-#                 actual_month = ((target_month - 1) % 12) + 1
-#
-#                 payments_this_month = company.payments.filter(arrangement=arrangement, month_number=month)
-#                 total_paid_this_month = payments_this_month.aggregate(total=Sum('amount_paid'))['total'] or Decimal(0)
-#                 monthly_due = arrangement.monthly_amount
-#                 remaining_in_month = monthly_due - total_paid_this_month
-#                 status = 'UNPAID'
-#                 if total_paid_this_month == monthly_due:
-#                     status = 'PAID'
-#                 elif total_paid_this_month > Decimal(0) and total_paid_this_month<monthly_due:
-#                   status = 'PARTIALLY_PAID'
-#                 monthly_payment_statuses.append({
-#                     'month': month,
-#                     'month_name': calendar.month_name[actual_month],
-#                     'year': target_year,
-#                     'expected': monthly_due,
-#                     'paid': total_paid_this_month,
-#                     'remaining':remaining_in_month,
-#                     'status': status,
-#                     'arrangement_id': arrangement.id
-#                 })
-#     context = {'company': company, 'monthly_payment_statuses': monthly_payment_statuses}
-#     return render(request, 'payments/company_monthly_payments.html', context)
-#
-#
 def company_monthly_payments(request, pk):
     company = get_object_or_404(Company, pk=pk)
     arrangements = company.arrangements.filter(is_active=True)

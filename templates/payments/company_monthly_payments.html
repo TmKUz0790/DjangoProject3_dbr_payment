@@ -13,8 +13,62 @@
 {##}
 {#    .page-header {#}
 {#        padding: 2rem 0;#}
-{#        margin-bottom: 3rem;#}
+{#        margin-bottom: 2rem;#}
 {#        border-bottom: 1px solid #e0e0e0;#}
+{#    }#}
+{##}
+{#    .summary-card {#}
+{#        background: white;#}
+{#        border-radius: 8px;#}
+{#        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#        padding: 2rem;#}
+{#        margin: 0 1rem 2rem 1rem;#}
+{#    }#}
+{##}
+{#    .summary-card h2 {#}
+{#        margin: 0 0 1.5rem 0;#}
+{#        color: #333;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 0.5rem;#}
+{#    }#}
+{##}
+{#    .summary-stats {#}
+{#        display: grid;#}
+{#        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));#}
+{#        gap: 2rem;#}
+{#    }#}
+{##}
+{#    .summary-stat {#}
+{#        text-align: center;#}
+{#        padding: 1rem;#}
+{#        border-radius: 6px;#}
+{#        background-color: #f8f9fa;#}
+{#    }#}
+{##}
+{#    .stat-label {#}
+{#        font-size: 0.9rem;#}
+{#        color: #666;#}
+{#        margin-bottom: 0.5rem;#}
+{#        font-weight: 500;#}
+{#    }#}
+{##}
+{#    .stat-value {#}
+{#        font-size: 1.5rem;#}
+{#        font-weight: 600;#}
+{#        color: #333;#}
+{#    }#}
+{##}
+{#    .stat-value.total {#}
+{#        color: #2196f3;#}
+{#    }#}
+{##}
+{#    .stat-value.paid {#}
+{#        color: #2e7d32;#}
+{#    }#}
+{##}
+{#    .stat-value.due {#}
+{#        color: #d32f2f;#}
 {#    }#}
 {##}
 {#    .payment-cards {#}
@@ -116,9 +170,31 @@
 {#        </h1>#}
 {#    </div>#}
 {##}
+{#    <div class="summary-card">#}
+{#        <h2>#}
+{#            <i class="fas fa-chart-pie" aria-hidden="true"></i>#}
+{#            Payment Summary#}
+{#        </h2>#}
+{#        <div class="summary-stats">#}
+{#            <div class="summary-stat">#}
+{#                <div class="stat-label">Total Expected Amount</div>#}
+{#                <div class="stat-value total">${{ total_expected|intcomma }}</div>#}
+{#            </div>#}
+{#            <div class="summary-stat">#}
+{#                <div class="stat-label">Total Paid Amount</div>#}
+{#                <div class="stat-value paid">${{ total_paid|intcomma }}</div>#}
+{#            </div>#}
+{#            <div class="summary-stat">#}
+{#                <div class="stat-label">Current Due Amount</div>#}
+{#                <div class="stat-value due">${{ current_due|intcomma }}</div>#}
+{#                <div class="stat-subtitle">(Past & Current Months Only)</div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
 {#    <div class="payment-cards">#}
 {#        {% for status in monthly_payment_statuses %}#}
-{#            <div class="payment-card">#}
+{#            <div class="payment-card {% if status.is_past_or_current %}current-period{% else %}future-period{% endif %}">#}
 {#                <h3>#}
 {#                    {{ status.month_name }} {{ status.year }}#}
 {#                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>#}
@@ -150,230 +226,418 @@
 {#        Back to Companies#}
 {#    </a>#}
 {#{% endblock %}#}
+
 {% extends 'payments/base4.html' %}
 {% load humanize %}
 
-{% block title %}{{ company.name }} - Monthly Payments{% endblock %}
+{% block title %}{{ company.name }} - Oylik To'lovlar{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
+    }
+    
     body {
-        background-color: #f5f5f5;
+        background-color: var(--light);
+        background-image: 
+            radial-gradient(circle at 90% 10%, rgba(255, 211, 105, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 10% 90%, rgba(0, 173, 181, 0.1) 0%, transparent 20%);
+        background-attachment: fixed;
     }
-
+    
+    /* ===== HEADER DESIGN ===== */
     .page-header {
-        padding: 2rem 0;
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
         margin-bottom: 2rem;
-        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
     }
-
-    .summary-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-        margin: 0 1rem 2rem 1rem;
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
     }
-
-    .summary-card h2 {
-        margin: 0 0 1.5rem 0;
-        color: #333;
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--success);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .page-title {
+        color: var(--light);
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
     }
-
+    
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    .title-icon {
+        color: var(--accent);
+    }
+    
+    /* ===== SUMMARY CARD ===== */
+    .summary-card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .summary-header {
+        margin: 0 0 1.5rem 0;
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        padding-bottom: 0.75rem;
+    }
+    
+    .summary-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 2px;
+        background-color: var(--accent);
+    }
+    
     .summary-stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
+        gap: 1.5rem;
     }
-
+    
     .summary-stat {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        background-color: #f9f9f9;
         text-align: center;
-        padding: 1rem;
-        border-radius: 6px;
-        background-color: #f8f9fa;
+        position: relative;
+        overflow: hidden;
     }
-
+    
+    .summary-stat::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+    }
+    
+    .stat-total::before {
+        background-color: var(--accent);
+    }
+    
+    .stat-paid::before {
+        background-color: var(--success);
+    }
+    
+    .stat-due::before {
+        background-color: var(--danger);
+    }
+    
     .stat-label {
         font-size: 0.9rem;
-        color: #666;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-    }
-
-    .stat-value {
-        font-size: 1.5rem;
+        color: var(--secondary);
+        margin-bottom: 0.75rem;
         font-weight: 600;
-        color: #333;
     }
-
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
     .stat-value.total {
-        color: #2196f3;
+        color: var(--accent);
     }
-
+    
     .stat-value.paid {
-        color: #2e7d32;
+        color: var(--success);
     }
-
+    
     .stat-value.due {
-        color: #d32f2f;
+        color: var(--danger);
     }
-
+    
+    .stat-subtitle {
+        font-size: 0.8rem;
+        color: var(--secondary);
+        margin-top: 0.5rem;
+        opacity: 0.8;
+    }
+    
+    /* ===== PAYMENT CARDS ===== */
+    .payment-cards-container {
+        padding: 0 1rem;
+    }
+    
     .payment-cards {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.5rem;
-        padding: 1rem;
     }
-
+    
     .payment-card {
         background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        padding: 0;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .payment-card h3 {
-        margin: 0 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e0e0e0;
+    
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .payment-card.current-period {
+        border-left: 3px solid var(--accent);
+    }
+    
+    .payment-card.future-period {
+        border-left: 3px solid var(--secondary);
+        opacity: 0.9;
+    }
+    
+    .payment-header {
+        padding: 1.25rem 1.5rem;
+        margin: 0;
+        background-color: #f9f9f9;
+        border-bottom: 1px solid #eee;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-
-    .payment-details {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
+    
+    .payment-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
     }
-
+    
+    .payment-header i {
+        color: var(--secondary);
+        font-size: 1.25rem;
+    }
+    
+    .payment-details {
+        padding: 1.5rem;
+    }
+    
     .payment-item {
         display: flex;
         justify-content: space-between;
-        padding: 0.5rem 0;
+        padding: 0.75rem 0;
         border-bottom: 1px solid #f0f0f0;
     }
-
+    
     .payment-item:last-child {
         border-bottom: none;
     }
-
+    
     .payment-label {
-        color: #666;
+        color: var(--secondary);
         font-weight: 500;
     }
-
+    
     .payment-value {
         font-weight: 600;
+        color: var(--primary);
     }
-
+    
     .status-indicator {
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        font-weight: bold;
+        padding: 1rem;
         text-align: center;
-        margin-top: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
-
+    
     .status-due {
-        background-color: #ffebee;
-        color: #d32f2f;
+        background-color: #FFEBEE;
+        color: var(--danger);
     }
-
+    
     .status-partial {
-        background-color: #fff3e0;
-        color: #f57c00;
+        background-color: #FFF3E0;
+        color: var(--warning);
     }
-
+    
     .status-paid {
-        background-color: #e8f5e9;
-        color: #2e7d32;
+        background-color: #E8F5E9;
+        color: var(--success);
     }
-
+    
+    .status-indicator i {
+        font-size: 0.75rem;
+    }
+    
+    /* ===== BACK BUTTON ===== */
     .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         margin: 2rem 1rem;
-        display: inline-block;
         padding: 0.75rem 1.5rem;
-        background-color: #6c757d;
+        background-color: var(--secondary);
         color: white;
         text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.2s;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
     }
-
+    
     .btn-back:hover {
-        background-color: #5a6268;
+        background-color: #424852;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(57, 62, 70, 0.3);
         color: white;
         text-decoration: none;
+    }
+    
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+        }
+        
+        .summary-card {
+            padding: 1.5rem;
+        }
+        
+        .payment-cards-container {
+            padding: 0 0.5rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>
-            {{ company.name }} - Monthly Payment Statuses
-            <i class="fas fa-credit-card table-icon" aria-hidden="true"></i>
-        </h1>
-    </div>
+    <div class="container mt-4">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-credit-card title-icon" aria-hidden="true"></i>
+                {{ company.name }} - Oylik To'lovlar Holati
+            </h1>
+        </div>
 
-    <div class="summary-card">
-        <h2>
-            <i class="fas fa-chart-pie" aria-hidden="true"></i>
-            Payment Summary
-        </h2>
-        <div class="summary-stats">
-            <div class="summary-stat">
-                <div class="stat-label">Total Expected Amount</div>
-                <div class="stat-value total">${{ total_expected|intcomma }}</div>
-            </div>
-            <div class="summary-stat">
-                <div class="stat-label">Total Paid Amount</div>
-                <div class="stat-value paid">${{ total_paid|intcomma }}</div>
-            </div>
-            <div class="summary-stat">
-                <div class="stat-label">Current Due Amount</div>
-                <div class="stat-value due">${{ current_due|intcomma }}</div>
-                <div class="stat-subtitle">(Past & Current Months Only)</div>
+        <div class="summary-card">
+            <h2 class="summary-header">
+                <i class="fas fa-chart-pie" aria-hidden="true"></i>
+                To'lovlar Xulosasi
+            </h2>
+            <div class="summary-stats">
+                <div class="summary-stat stat-total">
+                    <div class="stat-label">Jami Kutilgan Summa</div>
+                    <div class="stat-value total">${{ total_expected|intcomma }}</div>
+                </div>
+                <div class="summary-stat stat-paid">
+                    <div class="stat-label">Jami To'langan Summa</div>
+                    <div class="stat-value paid">${{ total_paid|intcomma }}</div>
+                </div>
+                <div class="summary-stat stat-due">
+                    <div class="stat-label">Joriy Qarz Summasi</div>
+                    <div class="stat-value due">${{ current_due|intcomma }}</div>
+                    <div class="stat-subtitle">(Faqat o'tgan va joriy oylar)</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="payment-cards">
-        {% for status in monthly_payment_statuses %}
-            <div class="payment-card {% if status.is_past_or_current %}current-period{% else %}future-period{% endif %}">
-                <h3>
-                    {{ status.month_name }} {{ status.year }}
-                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                </h3>
-                <div class="payment-details">
-                    <div class="payment-item">
-                        <span class="payment-label">Expected Amount</span>
-                        <span class="payment-value">${{ status.expected|intcomma }}</span>
+        <div class="payment-cards-container">
+            <div class="payment-cards">
+                {% for status in monthly_payment_statuses %}
+                    <div class="payment-card {% if status.is_past_or_current %}current-period{% else %}future-period{% endif %}">
+                        <div class="payment-header">
+                            <h3>{{ status.month_name }} {{ status.year }}</h3>
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-item">
+                                <span class="payment-label">Kutilgan Summa</span>
+                                <span class="payment-value">${{ status.expected|intcomma }}</span>
+                            </div>
+                            <div class="payment-item">
+                                <span class="payment-label">To'langan Summa</span>
+                                <span class="payment-value">${{ status.paid|intcomma }}</span>
+                            </div>
+                            <div class="payment-item">
+                                <span class="payment-label">Qolgan Summa</span>
+                                <span class="payment-value">${{ status.remaining|intcomma }}</span>
+                            </div>
+                        </div>
+                        <div class="status-indicator {% if status.status == 'UNPAID' %}status-due{% elif status.status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">
+                            <i class="fas fa-circle" aria-hidden="true"></i>
+                            {% if status.status == 'UNPAID' %}
+                                To'lanmagan
+                            {% elif status.status == 'PARTIALLY_PAID' %}
+                                Qisman To'langan
+                            {% else %}
+                                To'langan
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="payment-item">
-                        <span class="payment-label">Paid Amount</span>
-                        <span class="payment-value">${{ status.paid|intcomma }}</span>
-                    </div>
-                    <div class="payment-item">
-                        <span class="payment-label">Remaining Amount</span>
-                        <span class="payment-value">${{ status.remaining|intcomma }}</span>
-                    </div>
-                </div>
-                <div class="status-indicator {% if status.status == 'UNPAID' %}status-due{% elif status.status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">
-                    <i class="fas fa-circle" aria-hidden="true"></i>
-                    {{ status.status }}
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
+        </div>
 
-    <a href="{% url 'payments:company-list' %}" class="btn-back">
-        <i class="fas fa-arrow-left" aria-hidden="true"></i>
-        Back to Companies
-    </a>
+        <a href="{% url 'payments:company-list' %}" class="btn-back">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            Kompaniyalarga Qaytish
+        </a>
+    </div>
 {% endblock %}

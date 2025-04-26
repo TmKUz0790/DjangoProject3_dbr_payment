@@ -1,37 +1,313 @@
+{#{% extends "payments/base4.html" %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container mx-auto p-4">#}
+{#    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">#}
+{#        <h2 class="text-2xl font-bold mb-4">Delete Payment Confirmation</h2>#}
+{#        #}
+{#        <div class="mb-6">#}
+{#            <p class="text-gray-700 mb-4">Are you sure you want to delete this payment?</p>#}
+{#            #}
+{#            <div class="bg-gray-100 p-4 rounded mb-4">#}
+{#                <p><strong>Company:</strong> {{ payment.company.name }}</p>#}
+{#                <p><strong>Amount:</strong> ${{ payment.amount_paid }}</p>#}
+{#                <p><strong>Date:</strong> {{ payment.payment_date }}</p>#}
+{#                <p><strong>Month Number:</strong> {{ payment.month_number }}</p>#}
+{#                <p><strong>Arrangement:</strong> #{{ payment.arrangement.id }}</p>#}
+{#            </div>#}
+{#            #}
+{#            <p class="text-red-600 mb-4">This action cannot be undone.</p>#}
+{#        </div>#}
+{##}
+{#        <form method="post">#}
+{#            {% csrf_token %}#}
+{#            <div class="flex space-x-4">#}
+{#                <button type="submit" name="confirm" value="yes" #}
+{#                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">#}
+{#                    Confirm Delete#}
+{#                </button>#}
+{#                <a href="{% url 'payments:company-detail' pk=payment.company.pk %}" #}
+{#                   class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">#}
+{#                    Cancel#}
+{#                </a>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
 {% extends "payments/base4.html" %}
 
-{% block content %}
-<div class="container mx-auto p-4">
-    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 class="text-2xl font-bold mb-4">Delete Payment Confirmation</h2>
-        
-        <div class="mb-6">
-            <p class="text-gray-700 mb-4">Are you sure you want to delete this payment?</p>
-            
-            <div class="bg-gray-100 p-4 rounded mb-4">
-                <p><strong>Company:</strong> {{ payment.company.name }}</p>
-                <p><strong>Amount:</strong> ${{ payment.amount_paid }}</p>
-                <p><strong>Date:</strong> {{ payment.payment_date }}</p>
-                <p><strong>Month Number:</strong> {{ payment.month_number }}</p>
-                <p><strong>Arrangement:</strong> #{{ payment.arrangement.id }}</p>
-            </div>
-            
-            <p class="text-red-600 mb-4">This action cannot be undone.</p>
-        </div>
+{% block title %}To'lovni O'chirish{% endblock %}
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="flex space-x-4">
-                <button type="submit" name="confirm" value="yes" 
-                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Confirm Delete
-                </button>
-                <a href="{% url 'payments:company-detail' pk=payment.company.pk %}" 
-                   class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    Cancel
-                </a>
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
+    }
+    
+    /* ===== HEADER DESIGN ===== */
+    .page-header {
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--danger);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .header-title h1 {
+        color: var(--light);
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .header-title h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background-color: var(--danger);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        color: white;
+        font-size: 1.5rem;
+        transform: rotate(-5deg);
+        box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    /* ===== CONFIRMATION CARD ===== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+    
+    .confirmation-card {
+        background-color: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    .confirmation-message {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+    }
+    
+    .payment-details {
+        background-color: #F9FAFC;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--accent);
+    }
+    
+    .detail-item {
+        display: flex;
+        margin-bottom: 0.75rem;
+    }
+    
+    .detail-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: var(--secondary);
+        min-width: 150px;
+    }
+    
+    .detail-value {
+        color: var(--primary);
+    }
+    
+    .warning-message {
+        color: var(--danger);
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .warning-icon {
+        color: var(--danger);
+    }
+    
+    /* ===== FORM ACTIONS ===== */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        transition: all 0.3s ease;
+        gap: 0.5rem;
+    }
+    
+    .btn-danger {
+        background-color: var(--danger);
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background-color: #e64a19;
+        box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background-color: var(--secondary);
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #313640;
+        box-shadow: 0 4px 10px rgba(57, 62, 70, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 640px) {
+        .container {
+            padding: 0 1rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div class="header-title">
+            <div class="header-icon">
+                <i class="fas fa-trash-alt"></i>
             </div>
-        </form>
+            <h1>To'lovni O'chirish</h1>
+        </div>
+    </div>
+    
+    <div class="confirmation-card">
+        <div class="card-body">
+            <p class="confirmation-message">Haqiqatan ham ushbu to'lovni o'chirishni xohlaysizmi?</p>
+            
+            <div class="payment-details">
+                <div class="detail-item">
+                    <span class="detail-label">Kompaniya:</span>
+                    <span class="detail-value">{{ payment.company.name }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Summa:</span>
+                    <span class="detail-value">${{ payment.amount_paid }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Sana:</span>
+                    <span class="detail-value">{{ payment.payment_date }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Oy raqami:</span>
+                    <span class="detail-value">{{ payment.month_number }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Shartnoma:</span>
+                    <span class="detail-value">#{{ payment.arrangement.id }}</span>
+                </div>
+            </div>
+            
+            <p class="warning-message">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                Bu amalni ortga qaytarib bo'lmaydi.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" name="confirm" value="yes" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> O'chirishni Tasdiqlash
+                    </button>
+                    <a href="{% url 'payments:company-detail' pk=payment.company.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Bekor Qilish
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

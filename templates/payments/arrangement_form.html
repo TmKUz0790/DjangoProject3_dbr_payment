@@ -1,130 +1,735 @@
 {# templates/payments/arrangement_form.html #}
+{#{% extends 'payments/base4.html' %}#}
+{##}
+{#{% block title %}Add Payment Arrangement{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container py-4">#}
+{#    <div class="row justify-content-center">#}
+{#        <div class="col-md-8">#}
+{#            <div class="card">#}
+{#                <div class="card-header">#}
+{#                    <h2 class="h4 mb-0">Add New Payment Arrangement</h2>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <form method="post" id="arrangement-form" novalidate>#}
+{#                        {% csrf_token %}#}
+{##}
+{#                        {% if form.non_field_errors %}#}
+{#                            <div class="alert alert-danger">#}
+{#                                {{ form.non_field_errors }}#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        <div class="mb-3">#}
+{#                            <label for="{{ form.company.id_for_label }}" class="form-label">Company *</label>#}
+{#                            <select name="company" id="{{ form.company.id_for_label }}" class="form-select" required {% if form.company.value %}disabled{% endif %}>#}
+{#                                <option value="">---------</option>#}
+{#                                {% for company in form.fields.company.queryset %}#}
+{#                                    <option value="{{ company.id }}" {% if form.company.value|stringformat:"s" == company.id|stringformat:"s" %}selected{% endif %}>#}
+{#                                        {{ company.name }}#}
+{#                                    </option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+{#                            {% if form.company.value %}#}
+{#                                <input type="hidden" name="company" value="{{ form.company.value }}">#}
+{#                            {% endif %}#}
+{#                            {% if form.company.errors %}#}
+{#                                <div class="invalid-feedback d-block">#}
+{#                                    {{ form.company.errors }}#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="mb-3">#}
+{#                            <label for="{{ form.monthly_amount.id_for_label }}" class="form-label">Monthly Amount *</label>#}
+{#                            <div class="input-group">#}
+{#                                <span class="input-group-text">$</span>#}
+{#                                <input type="number" #}
+{#                                       name="monthly_amount" #}
+{#                                       id="{{ form.monthly_amount.id_for_label }}" #}
+{#                                       class="form-control" #}
+{#                                       step="0.01" #}
+{#                                       min="0" #}
+{#                                       required #}
+{#                                       value="{{ form.monthly_amount.value|default:'' }}">#}
+{#                            </div>#}
+{#                            {% if form.monthly_amount.errors %}#}
+{#                                <div class="invalid-feedback d-block">#}
+{#                                    {{ form.monthly_amount.errors }}#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="mb-3">#}
+{#                            <label for="{{ form.number_of_months.id_for_label }}" class="form-label">Number of Months *</label>#}
+{#                            <input type="number" #}
+{#                                   name="number_of_months" #}
+{#                                   id="{{ form.number_of_months.id_for_label }}" #}
+{#                                   class="form-control" #}
+{#                                   min="1" #}
+{#                                   required #}
+{#                                   value="{{ form.number_of_months.value|default:'' }}">#}
+{#                            {% if form.number_of_months.errors %}#}
+{#                                <div class="invalid-feedback d-block">#}
+{#                                    {{ form.number_of_months.errors }}#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="mb-3">#}
+{#                            <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *</label>#}
+{#                            <input type="date" #}
+{#                                   name="start_date" #}
+{#                                   id="{{ form.start_date.id_for_label }}" #}
+{#                                   class="form-control" #}
+{#                                   required #}
+{#                                   value="{{ form.start_date.value|date:'Y-m-d'|default:'' }}">#}
+{#                            {% if form.start_date.errors %}#}
+{#                                <div class="invalid-feedback d-block">#}
+{#                                    {{ form.start_date.errors }}#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                        <div class="mb-4">#}
+{#                            <div class="form-check">#}
+{#                                <input type="checkbox" #}
+{#                                       name="is_active" #}
+{#                                       id="{{ form.is_active.id_for_label }}" #}
+{#                                       class="form-check-input"#}
+{#                                       {% if form.is_active.value %}checked{% endif %}>#}
+{#                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active</label>#}
+{#                            </div>#}
+{#                            {% if form.is_active.errors %}#}
+{#                                <div class="invalid-feedback d-block">#}
+{#                                    {{ form.is_active.errors }}#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                        <div id="payment-summary" class="alert alert-info mb-4">#}
+{#                            <h5>Payment Summary:</h5>#}
+{#                            <p class="mb-1">Monthly Amount: $<span id="summary-monthly">0.00</span></p>#}
+{#                            <p class="mb-1">Number of Months: <span id="summary-months">0</span></p>#}
+{#                            <p class="mb-0">Total Amount: $<span id="summary-total">0.00</span></p>#}
+{#                        </div>#}
+{##}
+{#                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">#}
+{#                            <button type="submit" class="btn btn-primary me-2">Create Arrangement</button>#}
+{#                            <a href="{% url 'payments:company-list' %}" class="btn btn-secondary">Cancel</a>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+{##}
+{#{% block extra_js %}#}
+{#<script>#}
+{#document.addEventListener('DOMContentLoaded', function() {#}
+{#    const monthlyAmountInput = document.getElementById('{{ form.monthly_amount.id_for_label }}');#}
+{#    const numberOfMonthsInput = document.getElementById('{{ form.number_of_months.id_for_label }}');#}
+{#    const summaryMonthly = document.getElementById('summary-monthly');#}
+{#    const summaryMonths = document.getElementById('summary-months');#}
+{#    const summaryTotal = document.getElementById('summary-total');#}
+{##}
+{#    function updateSummary() {#}
+{#        const monthlyAmount = parseFloat(monthlyAmountInput.value) || 0;#}
+{#        const months = parseInt(numberOfMonthsInput.value) || 0;#}
+{#        const total = monthlyAmount * months;#}
+{##}
+{#        summaryMonthly.textContent = monthlyAmount.toFixed(2);#}
+{#        summaryMonths.textContent = months;#}
+{#        summaryTotal.textContent = total.toFixed(2);#}
+{#    }#}
+{##}
+{#    monthlyAmountInput.addEventListener('input', updateSummary);#}
+{#    numberOfMonthsInput.addEventListener('input', updateSummary);#}
+{##}
+{#    // Initial update#}
+{#    updateSummary();#}
+{#});#}
+{#</script>#}
+{#{% endblock %}#}
+{# templates/payments/arrangement_form.html #}
 {% extends 'payments/base4.html' %}
 
-{% block title %}Add Payment Arrangement{% endblock %}
+{% block title %}To'lov Shartnomasini Qo'shish{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
+    }
+    
+    body {
+        background-color: var(--light);
+        background-image: 
+            radial-gradient(circle at 90% 10%, rgba(255, 211, 105, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 10% 90%, rgba(0, 173, 181, 0.1) 0%, transparent 20%);
+        background-attachment: fixed;
+    }
+    
+    /* ===== HEADER DESIGN ===== */
+    .header-container {
+        padding: 0 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .page-header {
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--success);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .header-title h1 {
+        color: var(--light);
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .header-title h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background-color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        color: var(--primary);
+        font-size: 1.5rem;
+        transform: rotate(-5deg);
+        box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    /* ===== FORM CARD ===== */
+    .form-container {
+        padding: 0 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-card {
+        background-color: white;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-header {
+        background-color: var(--primary);
+        color: var(--light);
+        padding: 1.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        opacity: 0.2;
+    }
+    
+    .form-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        position: relative;
+    }
+    
+    .form-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background-color: var(--accent);
+    }
+    
+    .form-body {
+        padding: 2rem;
+    }
+    
+    /* ===== FORM CONTROLS ===== */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary);
+    }
+    
+    .required-field::after {
+        content: ' *';
+        color: var(--danger);
+    }
+    
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--primary);
+        background-color: #f9f9f9;
+        background-clip: padding-box;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-control:focus {
+        color: var(--primary);
+        background-color: #fff;
+        border-color: var(--accent);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 211, 105, 0.25);
+    }
+    
+    /* Select dropdown */
+    .form-select {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--primary);
+        background-color: #f9f9f9;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        appearance: none;
+    }
+    
+    .form-select:focus {
+        border-color: var(--accent);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 211, 105, 0.25);
+    }
+    
+    /* Input group */
+    .input-group {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        width: 100%;
+    }
+    
+    .input-group-text {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--secondary);
+        text-align: center;
+        white-space: nowrap;
+        background-color: #e9ecef;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem 0 0 0.5rem;
+    }
+    
+    .input-group > .form-control {
+        position: relative;
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    
+    /* Checkbox */
+    .form-check {
+        display: block;
+        min-height: 1.5rem;
+        padding-left: 1.5rem;
+        margin-bottom: 0.125rem;
+    }
+    
+    .form-check-input {
+        position: absolute;
+        margin-top: 0.25rem;
+        margin-left: -1.5rem;
+        width: 1rem;
+        height: 1rem;
+        appearance: none;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 0.25rem;
+        background-color: #fff;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 0.75rem;
+    }
+    
+    .form-check-input:focus {
+        border-color: var(--accent);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 211, 105, 0.25);
+    }
+    
+    .form-check-label {
+        color: var(--secondary);
+        font-weight: 500;
+    }
+    
+    /* ===== ERROR MESSAGES ===== */
+    .alert-danger {
+        color: var(--danger);
+        background-color: #fdede9;
+        border-color: #fcdbd3;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+    }
+    
+    .invalid-feedback {
+        display: block;
+        width: 100%;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--danger);
+    }
+    
+    /* ===== PAYMENT SUMMARY ===== */
+    .payment-summary {
+        background-color: #e3f2fd;
+        color: #0c5460;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid var(--accent);
+    }
+    
+    .payment-summary h5 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: var(--primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .payment-summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .payment-summary-item:last-child {
+        margin-bottom: 0;
+        padding-top: 0.5rem;
+        border-top: 1px dashed rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+    }
+    
+    .payment-summary-label {
+        color: #0c5460;
+    }
+    
+    .payment-summary-value {
+        font-weight: 600;
+    }
+    
+    /* ===== FORM ACTIONS ===== */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+        gap: 0.5rem;
+    }
+    
+    .btn-primary {
+        color: var(--primary);
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+    
+    .btn-primary:hover {
+        background-color: #ffc840;
+        border-color: #ffc840;
+        box-shadow: 0 4px 10px rgba(255, 211, 105, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        color: white;
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+    
+    .btn-secondary:hover {
+        background-color: #424852;
+        border-color: #424852;
+        box-shadow: 0 4px 10px rgba(57, 62, 70, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 768px) {
+        .header-container, .form-container {
+            padding: 0 1rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="h4 mb-0">Add New Payment Arrangement</h2>
+    <div class="header-container">
+        <div class="page-header">
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-file-contract"></i>
                 </div>
-                <div class="card-body">
-                    <form method="post" id="arrangement-form" novalidate>
-                        {% csrf_token %}
-
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
-                        {% endif %}
-
-                        <div class="mb-3">
-                            <label for="{{ form.company.id_for_label }}" class="form-label">Company *</label>
-                            <select name="company" id="{{ form.company.id_for_label }}" class="form-select" required {% if form.company.value %}disabled{% endif %}>
-                                <option value="">---------</option>
-                                {% for company in form.fields.company.queryset %}
-                                    <option value="{{ company.id }}" {% if form.company.value|stringformat:"s" == company.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ company.name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            {% if form.company.value %}
-                                <input type="hidden" name="company" value="{{ form.company.value }}">
-                            {% endif %}
-                            {% if form.company.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.company.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.monthly_amount.id_for_label }}" class="form-label">Monthly Amount *</label>
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="number" 
-                                       name="monthly_amount" 
-                                       id="{{ form.monthly_amount.id_for_label }}" 
-                                       class="form-control" 
-                                       step="0.01" 
-                                       min="0" 
-                                       required 
-                                       value="{{ form.monthly_amount.value|default:'' }}">
-                            </div>
-                            {% if form.monthly_amount.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.monthly_amount.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.number_of_months.id_for_label }}" class="form-label">Number of Months *</label>
-                            <input type="number" 
-                                   name="number_of_months" 
-                                   id="{{ form.number_of_months.id_for_label }}" 
-                                   class="form-control" 
-                                   min="1" 
-                                   required 
-                                   value="{{ form.number_of_months.value|default:'' }}">
-                            {% if form.number_of_months.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.number_of_months.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *</label>
-                            <input type="date" 
-                                   name="start_date" 
-                                   id="{{ form.start_date.id_for_label }}" 
-                                   class="form-control" 
-                                   required 
-                                   value="{{ form.start_date.value|date:'Y-m-d'|default:'' }}">
-                            {% if form.start_date.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.start_date.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input type="checkbox" 
-                                       name="is_active" 
-                                       id="{{ form.is_active.id_for_label }}" 
-                                       class="form-check-input"
-                                       {% if form.is_active.value %}checked{% endif %}>
-                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active</label>
-                            </div>
-                            {% if form.is_active.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.is_active.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div id="payment-summary" class="alert alert-info mb-4">
-                            <h5>Payment Summary:</h5>
-                            <p class="mb-1">Monthly Amount: $<span id="summary-monthly">0.00</span></p>
-                            <p class="mb-1">Number of Months: <span id="summary-months">0</span></p>
-                            <p class="mb-0">Total Amount: $<span id="summary-total">0.00</span></p>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="submit" class="btn btn-primary me-2">Create Arrangement</button>
-                            <a href="{% url 'payments:company-list' %}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
-                </div>
+                <h1>To'lov Shartnomasini Qo'shish</h1>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Yangi To'lov Shartnomasi</h2>
+            </div>
+            <div class="form-body">
+                <form method="post" id="arrangement-form" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="{{ form.company.id_for_label }}" class="form-label required-field">Kompaniya</label>
+                        <select name="company" id="{{ form.company.id_for_label }}" class="form-select" required {% if form.company.value %}disabled{% endif %}>
+                            <option value="">---------</option>
+                            {% for company in form.fields.company.queryset %}
+                                <option value="{{ company.id }}" {% if form.company.value|stringformat:"s" == company.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ company.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.company.value %}
+                            <input type="hidden" name="company" value="{{ form.company.value }}">
+                        {% endif %}
+                        {% if form.company.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.company.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.monthly_amount.id_for_label }}" class="form-label required-field">Oylik To'lov Summasi</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" 
+                                   name="monthly_amount" 
+                                   id="{{ form.monthly_amount.id_for_label }}" 
+                                   class="form-control" 
+                                   step="0.01" 
+                                   min="0" 
+                                   required 
+                                   value="{{ form.monthly_amount.value|default:'' }}">
+                        </div>
+                        {% if form.monthly_amount.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.monthly_amount.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.number_of_months.id_for_label }}" class="form-label required-field">Oylar Soni</label>
+                        <input type="number" 
+                               name="number_of_months" 
+                               id="{{ form.number_of_months.id_for_label }}" 
+                               class="form-control" 
+                               min="1" 
+                               required 
+                               value="{{ form.number_of_months.value|default:'' }}">
+                        {% if form.number_of_months.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.number_of_months.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.start_date.id_for_label }}" class="form-label required-field">Boshlanish Sanasi</label>
+                        <input type="date" 
+                               name="start_date" 
+                               id="{{ form.start_date.id_for_label }}" 
+                               class="form-control" 
+                               required 
+                               value="{{ form.start_date.value|date:'Y-m-d'|default:'' }}">
+                        {% if form.start_date.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.start_date.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                   name="is_active" 
+                                   id="{{ form.is_active.id_for_label }}" 
+                                   class="form-check-input"
+                                   {% if form.is_active.value %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Faol</label>
+                        </div>
+                        {% if form.is_active.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.is_active.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div id="payment-summary" class="payment-summary">
+                        <h5>
+                            <i class="fas fa-calculator"></i>
+                            To'lov Xulosasi:
+                        </h5>
+                        <div class="payment-summary-item">
+                            <span class="payment-summary-label">Oylik Summa:</span>
+                            <span class="payment-summary-value">$<span id="summary-monthly">0.00</span></span>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span class="payment-summary-label">Oylar Soni:</span>
+                            <span class="payment-summary-value"><span id="summary-months">0</span></span>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span class="payment-summary-label">Jami Summa:</span>
+                            <span class="payment-summary-value">$<span id="summary-total">0.00</span></span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Shartnomani Yaratish
+                        </button>
+                        <a href="{% url 'payments:company-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor Qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}

@@ -1,111 +1,817 @@
+{##}
+{#{% extends 'payments/base4.html' %}#}
+{#{% load humanize %}#}
+{##}
+{#{% block title %}Barcha Kompaniyalar To'lov Holati{% endblock %}#}
+{##}
+{#{% block extra_css %}#}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">#}
+{#<style>#}
+{#    :root {#}
+{#        --primary-color: #0D47A1;#}
+{#        --secondary-color: #5E35B1;#}
+{#        --success-color: #00796B;#}
+{#        --warning-color: #FF8F00;#}
+{#        --danger-color: #C62828;#}
+{#        --light-color: #F5F5F5;#}
+{#        --dark-color: #263238;#}
+{#    }#}
+{#    #}
+{#    body {#}
+{#        background-color: #E8EAF6;#}
+{#        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;#}
+{#    }#}
+{#    #}
+{#    .page-header {#}
+{#        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));#}
+{#        color: white;#}
+{#        padding: 2rem;#}
+{#        border-radius: 0 0 2rem 2rem;#}
+{#        margin-bottom: 2rem;#}
+{#        text-align: center;#}
+{#        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);#}
+{#    }#}
+{#    #}
+{#    .page-header h1 {#}
+{#        margin: 0;#}
+{#        font-size: 2.2rem;#}
+{#        font-weight: 600;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        justify-content: center;#}
+{#        gap: 1rem;#}
+{#    }#}
+{#    #}
+{#    .overall-summary {#}
+{#        background: white;#}
+{#        border-radius: 1.5rem;#}
+{#        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);#}
+{#        padding: 2rem;#}
+{#        margin: 0 1.5rem 2.5rem 1.5rem;#}
+{#    }#}
+{#    #}
+{#    .summary-header {#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 0.8rem;#}
+{#        margin-bottom: 1.5rem;#}
+{#        color: var(--dark-color);#}
+{#        border-bottom: 2px solid var(--light-color);#}
+{#        padding-bottom: 1rem;#}
+{#    }#}
+{#    #}
+{#    .summary-grid {#}
+{#        display: grid;#}
+{#        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));#}
+{#        gap: 1.5rem;#}
+{#    }#}
+{#    #}
+{#    .summary-item {#}
+{#        text-align: center;#}
+{#        padding: 2rem 1.5rem;#}
+{#        border-radius: 1rem;#}
+{#        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);#}
+{#        position: relative;#}
+{#        overflow: hidden;#}
+{#        transition: transform 0.3s ease;#}
+{#    }#}
+{#    #}
+{#    .summary-item:hover {#}
+{#        transform: translateY(-5px);#}
+{#    }#}
+{#    #}
+{#    .summary-item::before {#}
+{#        content: '';#}
+{#        position: absolute;#}
+{#        top: 0;#}
+{#        left: 0;#}
+{#        width: 100%;#}
+{#        height: 5px;#}
+{#    }#}
+{#    #}
+{#    .grand-total {#}
+{#        background-color: #E3F2FD;#}
+{#    }#}
+{#    #}
+{#    .grand-total::before {#}
+{#        background-color: var(--primary-color);#}
+{#    }#}
+{#    #}
+{#    .total-paid {#}
+{#        background-color: #E8F5E9;#}
+{#    }#}
+{#    #}
+{#    .total-paid::before {#}
+{#        background-color: var(--success-color);#}
+{#    }#}
+{#    #}
+{#    .total-due {#}
+{#        background-color: #FFEBEE;#}
+{#    }#}
+{#    #}
+{#    .total-due::before {#}
+{#        background-color: var(--danger-color);#}
+{#    }#}
+{#    #}
+{#    .summary-label {#}
+{#        font-size: 1rem;#}
+{#        color: #546E7A;#}
+{#        margin-bottom: 0.8rem;#}
+{#        font-weight: 500;#}
+{#    }#}
+{#    #}
+{#    .summary-value {#}
+{#        font-size: 2rem;#}
+{#        font-weight: 700;#}
+{#    }#}
+{#    #}
+{#    .grand-total .summary-value { color: var(--primary-color); }#}
+{#    .total-paid .summary-value { color: var(--success-color); }#}
+{#    .total-due .summary-value { color: var(--danger-color); }#}
+{#    #}
+{#    .companies-container {#}
+{#        margin: 1.5rem;#}
+{#    }#}
+{#    #}
+{#    .companies-header {#}
+{#        display: flex;#}
+{#        justify-content: space-between;#}
+{#        align-items: center;#}
+{#        margin-bottom: 1rem;#}
+{#        padding: 0 1rem;#}
+{#    }#}
+{#    #}
+{#    .companies-header h2 {#}
+{#        font-size: 1.5rem;#}
+{#        color: var(--dark-color);#}
+{#        margin: 0;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 0.8rem;#}
+{#    }#}
+{#    #}
+{#    .companies-table-container {#}
+{#        background: white;#}
+{#        border-radius: 1rem;#}
+{#        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);#}
+{#        overflow: hidden;#}
+{#    }#}
+{##}
+{#    .companies-table {#}
+{#        width: 100%;#}
+{#        border-collapse: separate;#}
+{#        border-spacing: 0;#}
+{#    }#}
+{##}
+{#    .companies-table th,#}
+{#    .companies-table td {#}
+{#        padding: 1.2rem 1rem;#}
+{#        text-align: left;#}
+{#    }#}
+{##}
+{#    .companies-table th {#}
+{#        background: var(--primary-color);#}
+{#        color: white;#}
+{#        font-weight: 500;#}
+{#        font-size: 0.95rem;#}
+{#        text-transform: uppercase;#}
+{#        letter-spacing: 0.5px;#}
+{#    }#}
+{#    #}
+{#    .companies-table th:first-child {#}
+{#        border-top-left-radius: 1rem;#}
+{#    }#}
+{#    #}
+{#    .companies-table th:last-child {#}
+{#        border-top-right-radius: 1rem;#}
+{#    }#}
+{##}
+{#    .companies-table tr {#}
+{#        transition: background-color 0.2s ease;#}
+{#    }#}
+{##}
+{#    .companies-table tr:nth-child(even) {#}
+{#        background-color: #F8FAFF;#}
+{#    }#}
+{##}
+{#    .companies-table tr:hover {#}
+{#        background-color: #E8EAF6;#}
+{#    }#}
+{#    #}
+{#    .companies-table td {#}
+{#        border-bottom: 1px solid #E0E0E0;#}
+{#    }#}
+{##}
+{#    .status-badge {#}
+{#        padding: 0.6rem 1rem;#}
+{#        border-radius: 2rem;#}
+{#        font-weight: 500;#}
+{#        display: inline-block;#}
+{#        text-align: center;#}
+{#        min-width: 100px;#}
+{#        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);#}
+{#    }#}
+{##}
+{#    .status-unpaid { #}
+{#        background: #FFEBEE; #}
+{#        color: var(--danger-color); #}
+{#    }#}
+{#    #}
+{#    .status-partial { #}
+{#        background: #FFF3E0; #}
+{#        color: var(--warning-color); #}
+{#    }#}
+{#    #}
+{#    .status-paid { #}
+{#        background: #E8F5E9; #}
+{#        color: var(--success-color); #}
+{#    }#}
+{##}
+{#    .company-link {#}
+{#        color: var(--primary-color);#}
+{#        text-decoration: none;#}
+{#        font-weight: 600;#}
+{#        transition: color 0.2s ease;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 0.5rem;#}
+{#    }#}
+{##}
+{#    .company-link:hover {#}
+{#        color: var(--secondary-color);#}
+{#    }#}
+{#    #}
+{#    .company-icon {#}
+{#        background-color: #E3F2FD;#}
+{#        width: 32px;#}
+{#        height: 32px;#}
+{#        border-radius: 50%;#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        justify-content: center;#}
+{#        color: var(--primary-color);#}
+{#    }#}
+{##}
+{#    .last-payment {#}
+{#        display: flex;#}
+{#        align-items: center;#}
+{#        gap: 0.5rem;#}
+{#        color: #546E7A;#}
+{#        font-size: 0.9rem;#}
+{#    }#}
+{##}
+{#    .arrangement-count {#}
+{#        display: inline-flex;#}
+{#        align-items: center;#}
+{#        gap: 0.4rem;#}
+{#        padding: 0.4rem 0.8rem;#}
+{#        background: #E3F2FD;#}
+{#        color: var(--primary-color);#}
+{#        border-radius: 2rem;#}
+{#        font-size: 0.9rem;#}
+{#        font-weight: 500;#}
+{#    }#}
+{#    #}
+{#    .amount-column {#}
+{#        font-weight: 600;#}
+{#    }#}
+{#</style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="page-header">#}
+{#        <h1>#}
+{#            <i class="fas fa-building" aria-hidden="true"></i>#}
+{#            Barcha Kompaniyalar To'lov Holati#}
+{#        </h1>#}
+{#    </div>#}
+{##}
+{#    <div class="overall-summary">#}
+{#        <div class="summary-header">#}
+{#            <i class="fas fa-chart-pie fa-lg" aria-hidden="true"></i>#}
+{#            <h2>Umumiy Ko'rsatkichlar</h2>#}
+{#        </div>#}
+{#        <div class="summary-grid">#}
+{#            <div class="summary-item grand-total">#}
+{#                <div class="summary-label">Jami Kutilayotgan Summa</div>#}
+{#                <div class="summary-value">${{ grand_total_expected|intcomma }}</div>#}
+{#            </div>#}
+{#            <div class="summary-item total-paid">#}
+{#                <div class="summary-label">Jami To'langan Summa</div>#}
+{#                <div class="summary-value">${{ grand_total_paid|intcomma }}</div>#}
+{#            </div>#}
+{#            <div class="summary-item total-due">#}
+{#                <div class="summary-label">Hozirgi Qarz Summasi</div>#}
+{#                <div class="summary-value">${{ grand_total_due|intcomma }}</div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="companies-container">#}
+{#        <div class="companies-header">#}
+{#            <h2>#}
+{#                <i class="fas fa-list-ul" aria-hidden="true"></i>#}
+{#                Kompaniyalar Ro'yxati#}
+{#            </h2>#}
+{#        </div>#}
+{#        #}
+{#        <div class="companies-table-container">#}
+{#            <table class="companies-table">#}
+{#                <thead>#}
+{#                    <tr>#}
+{#                        <th>Kompaniya Nomi</th>#}
+{#                        <th>Kutilgan Summa</th>#}
+{#                        <th>To'langan Summa</th>#}
+{#                        <th>Joriy Qarz</th>#}
+{#                        <th>Holat</th>#}
+{#                        <th>Shartnomalar</th>#}
+{#                        <th>Oxirgi To'lov</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for data in company_payment_data %}#}
+{#                    <tr>#}
+{#                        <td>#}
+{#                            <a href="{% url 'payments:company-monthly-payments' data.company.pk %}" class="company-link">#}
+{#                                <span class="company-icon">#}
+{#                                    <i class="fas fa-building fa-sm"></i>#}
+{#                                </span>#}
+{#                                {{ data.company.name }}#}
+{#                            </a>#}
+{#                        </td>#}
+{#                        <td class="amount-column">${{ data.total_expected|intcomma }}</td>#}
+{#                        <td class="amount-column">${{ data.total_paid|intcomma }}</td>#}
+{#                        <td class="amount-column">${{ data.current_due|intcomma }}</td>#}
+{#                        <td>#}
+{#                            <span class="status-badge {% if data.payment_status == 'UNPAID' %}status-unpaid{% elif data.payment_status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">#}
+{#                                {% if data.payment_status == 'UNPAID' %}#}
+{#                                    To'lanmagan#}
+{#                                {% elif data.payment_status == 'PARTIALLY_PAID' %}#}
+{#                                    Qisman To'langan#}
+{#                                {% else %}#}
+{#                                    To'langan#}
+{#                                {% endif %}#}
+{#                            </span>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <span class="arrangement-count">#}
+{#                                <i class="fas fa-file-contract fa-sm"></i>#}
+{#                                {{ data.arrangements_count }}#}
+{#                            </span>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <span class="last-payment">#}
+{#                                <i class="fas fa-calendar-alt fa-sm"></i>#}
+{#                                {% if data.last_payment_date %}#}
+{#                                    {{ data.last_payment_date|date:"d.m.Y" }}#}
+{#                                {% else %}#}
+{#                                    To'lovlar yo'q#}
+{#                                {% endif %}#}
+{#                            </span>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
 {% extends 'payments/base4.html' %}
 {% load humanize %}
 
-{% block title %}All Companies Payment Status{% endblock %}
+{% block title %}Barcha Kompaniyalar To'lov Holati{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    .overall-summary {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-        margin: 0 1rem 2rem 1rem;
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
     }
-
-    .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-top: 1.5rem;
-    }
-
-    .summary-item {
+    
+    /* ===== HEADER DESIGN ===== */
+    .page-header {
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
         text-align: center;
-        padding: 1.5rem;
-        background: #f8f9fa;
-        border-radius: 8px;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
     }
-
-    .summary-label {
-        font-size: 0.9rem;
-        color: #666;
-        margin-bottom: 0.5rem;
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
     }
-
-    .summary-value {
-        font-size: 1.75rem;
-        font-weight: 600;
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--success);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
     }
-
-    .grand-total { color: #2196f3; }
-    .total-paid { color: #2e7d32; }
-    .total-due { color: #d32f2f; }
-
-    .companies-table-container {
-        margin: 1rem;
+    
+    .page-header h1 {
+        color: var(--light);
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        position: relative;
+    }
+    
+    .page-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    /* ===== SUMMARY SECTION ===== */
+    .summary-container {
+        padding: 0 2rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .summary-wrapper {
         background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
         overflow: hidden;
     }
-
+    
+    .summary-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+    }
+    
+    .summary-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 5px;
+        background-color: var(--accent);
+    }
+    
+    .summary-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    .summary-header i {
+        color: var(--accent);
+        font-size: 1.5rem;
+    }
+    
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+    
+    .summary-item {
+        padding: 2rem 1.5rem;
+        border-radius: 1rem;
+        background-color: #F9FAFC;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .summary-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .summary-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+    }
+    
+    .grand-total::before {
+        background-color: var(--accent);
+    }
+    
+    .total-paid::before {
+        background-color: var(--success);
+    }
+    
+    .total-due::before {
+        background-color: var(--danger);
+    }
+    
+    .summary-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+    }
+    
+    .grand-total .summary-icon {
+        background-color: rgba(255, 211, 105, 0.1);
+        color: var(--accent);
+    }
+    
+    .total-paid .summary-icon {
+        background-color: rgba(0, 173, 181, 0.1);
+        color: var(--success);
+    }
+    
+    .total-due .summary-icon {
+        background-color: rgba(255, 87, 34, 0.1);
+        color: var(--danger);
+    }
+    
+    .summary-label {
+        font-size: 1rem;
+        color: var(--secondary);
+        margin-bottom: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .summary-value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .grand-total .summary-value { color: var(--accent); }
+    .total-paid .summary-value { color: var(--success); }
+    .total-due .summary-value { color: var(--danger); }
+    
+    /* ===== COMPANIES TABLE ===== */
+    .companies-container {
+        padding: 0 2rem;
+    }
+    
+    .companies-header {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .companies-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    .companies-header i {
+        color: var(--accent);
+        font-size: 1.3rem;
+    }
+    
+    .companies-table-container {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
     .companies-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
     }
-
-    .companies-table th,
-    .companies-table td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
+    
     .companies-table th {
-        background: #f5f5f5;
+        background-color: var(--primary);
+        color: white;
+        padding: 1.25rem 1.5rem;
+        text-align: left;
         font-weight: 600;
-        color: #333;
-    }
-
-    .companies-table tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        font-weight: 500;
-        display: inline-block;
-    }
-
-    .status-unpaid { background: #ffebee; color: #d32f2f; }
-    .status-partial { background: #fff3e0; color: #f57c00; }
-    .status-paid { background: #e8f5e9; color: #2e7d32; }
-
-    .company-link {
-        color: #2196f3;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .company-link:hover {
-        text-decoration: underline;
-    }
-
-    .last-payment {
         font-size: 0.9rem;
-        color: #666;
+        letter-spacing: 0.5px;
+        position: relative;
     }
-
+    
+    .companies-table th:first-child {
+        border-top-left-radius: 1rem;
+    }
+    
+    .companies-table th:last-child {
+        border-top-right-radius: 1rem;
+    }
+    
+    .companies-table td {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .companies-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .companies-table tr {
+        transition: background-color 0.2s ease;
+    }
+    
+    .companies-table tr:nth-child(even) {
+        background-color: #F9FAFC;
+    }
+    
+    .companies-table tr:hover {
+        background-color: #F2F4F8;
+    }
+    
+    /* Company link styling */
+    .company-link {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    
+    .company-link:hover {
+        color: var(--accent);
+    }
+    
+    .company-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background-color: rgba(255, 211, 105, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        transition: all 0.2s ease;
+    }
+    
+    .company-link:hover .company-icon {
+        background-color: var(--accent);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+    
+    /* Amount column styling */
+    .amount-column {
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    /* Status badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-width: 120px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .status-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.15;
+        z-index: -1;
+    }
+    
+    .status-unpaid { 
+        color: var(--danger); 
+    }
+    
+    .status-unpaid::before {
+        background-color: var(--danger);
+    }
+    
+    .status-partial { 
+        color: var(--warning); 
+    }
+    
+    .status-partial::before {
+        background-color: var(--warning);
+    }
+    
+    .status-paid { 
+        color: var(--success);
+    }
+    
+    .status-paid::before {
+        background-color: var(--success);
+    }
+    
+    /* Arrangement count badge */
     .arrangement-count {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: #e3f2fd;
-        color: #1976d2;
-        border-radius: 999px;
-        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--primary);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .arrangement-count::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--accent);
+        opacity: 0.15;
+        z-index: -1;
+    }
+    
+    /* Last payment styling */
+    .last-payment {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary);
+    }
+    
+    .last-payment i {
+        color: var(--secondary);
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .summary-container, 
+        .companies-container {
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            padding: 1.5rem;
+        }
+        
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+        
+        .companies-table-container {
+            overflow-x: auto;
+        }
+        
+        .companies-table {
+            min-width: 800px;
+        }
     }
 </style>
 {% endblock %}
@@ -113,76 +819,108 @@
 {% block content %}
     <div class="page-header">
         <h1>
-            All Companies Payment Status
             <i class="fas fa-building" aria-hidden="true"></i>
+            Barcha Kompaniyalar To'lov Holati
         </h1>
     </div>
 
-    <div class="overall-summary">
-        <h2>
-            <i class="fas fa-chart-pie" aria-hidden="true"></i>
-            Overall Summary
-        </h2>
-        <div class="summary-grid">
-            <div class="summary-item">
-                <div class="summary-label">Total Expected Amount</div>
-                <div class="summary-value grand-total">${{ grand_total_expected|intcomma }}</div>
+    <div class="summary-container">
+        <div class="summary-wrapper">
+            <div class="summary-header">
+                <i class="fas fa-chart-pie" aria-hidden="true"></i>
+                <h2>Umumiy Ko'rsatkichlar</h2>
             </div>
-            <div class="summary-item">
-                <div class="summary-label">Total Paid Amount</div>
-                <div class="summary-value total-paid">${{ grand_total_paid|intcomma }}</div>
-            </div>
-            <div class="summary-item">
-                <div class="summary-label">Total Current Due</div>
-                <div class="summary-value total-due">${{ grand_total_due|intcomma }}</div>
+            <div class="summary-grid">
+                <div class="summary-item grand-total">
+                    <div class="summary-icon">
+                        <i class="fas fa-hand-holding-usd fa-lg"></i>
+                    </div>
+                    <div class="summary-label">Jami Kutilayotgan Summa</div>
+                    <div class="summary-value">${{ grand_total_expected|intcomma }}</div>
+                </div>
+                <div class="summary-item total-paid">
+                    <div class="summary-icon">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div class="summary-label">Jami To'langan Summa</div>
+                    <div class="summary-value">${{ grand_total_paid|intcomma }}</div>
+                </div>
+                <div class="summary-item total-due">
+                    <div class="summary-icon">
+                        <i class="fas fa-exclamation-triangle fa-lg"></i>
+                    </div>
+                    <div class="summary-label">Hozirgi Qarz Summasi</div>
+                    <div class="summary-value">${{ grand_total_due|intcomma }}</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="companies-table-container">
-        <table class="companies-table">
-            <thead>
-                <tr>
-                    <th>Company Name</th>
-                    <th>Total Expected</th>
-                    <th>Total Paid</th>
-                    <th>Current Due</th>
-                    <th>Status</th>
-                    <th>Arrangements</th>
-                    <th>Last Payment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for data in company_payment_data %}
-                <tr>
-                    <td>
-                        <a href="{% url 'payments:company-monthly-payments' data.company.pk %}" class="company-link">
-                            {{ data.company.name }}
-                        </a>
-                    </td>
-                    <td>${{ data.total_expected|intcomma }}</td>
-                    <td>${{ data.total_paid|intcomma }}</td>
-                    <td>${{ data.current_due|intcomma }}</td>
-                    <td>
-                        <span class="status-badge {% if data.payment_status == 'UNPAID' %}status-unpaid{% elif data.payment_status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">
-                            {{ data.payment_status }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="arrangement-count">{{ data.arrangements_count }}</span>
-                    </td>
-                    <td>
-                        <span class="last-payment">
-                            {% if data.last_payment_date %}
-                                {{ data.last_payment_date|date:"M d, Y" }}
-                            {% else %}
-                                No payments
-                            {% endif %}
-                        </span>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="companies-container">
+        <div class="companies-header">
+            <i class="fas fa-list-ul" aria-hidden="true"></i>
+            <h2>Kompaniyalar Ro'yxati</h2>
+        </div>
+        
+        <div class="companies-table-container">
+            <table class="companies-table">
+                <thead>
+                    <tr>
+                        <th>Kompaniya Nomi</th>
+                        <th>Kutilgan Summa</th>
+                        <th>To'langan Summa</th>
+                        <th>Joriy Qarz</th>
+                        <th>Holat</th>
+                        <th>Shartnomalar</th>
+                        <th>Oxirgi To'lov</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in company_payment_data %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'payments:company-monthly-payments' data.company.pk %}" class="company-link">
+                                <span class="company-icon">
+                                    <i class="fas fa-building"></i>
+                                </span>
+                                {{ data.company.name }}
+                            </a>
+                        </td>
+                        <td class="amount-column">${{ data.total_expected|intcomma }}</td>
+                        <td class="amount-column">${{ data.total_paid|intcomma }}</td>
+                        <td class="amount-column">${{ data.current_due|intcomma }}</td>
+                        <td>
+                            <span class="status-badge {% if data.payment_status == 'UNPAID' %}status-unpaid{% elif data.payment_status == 'PARTIALLY_PAID' %}status-partial{% else %}status-paid{% endif %}">
+                                <i class="fas {% if data.payment_status == 'UNPAID' %}fa-times-circle{% elif data.payment_status == 'PARTIALLY_PAID' %}fa-clock{% else %}fa-check-circle{% endif %}"></i>
+                                {% if data.payment_status == 'UNPAID' %}
+                                    To'lanmagan
+                                {% elif data.payment_status == 'PARTIALLY_PAID' %}
+                                    Qisman To'langan
+                                {% else %}
+                                    To'langan
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="arrangement-count">
+                                <i class="fas fa-file-contract"></i>
+                                {{ data.arrangements_count }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="last-payment">
+                                <i class="fas fa-calendar-alt"></i>
+                                {% if data.last_payment_date %}
+                                    {{ data.last_payment_date|date:"d.m.Y" }}
+                                {% else %}
+                                    To'lovlar yo'q
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}

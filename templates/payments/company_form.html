@@ -1,3 +1,4 @@
+{##}
 {# templates/payments/company_form.html #}
 {#{% extends 'payments/base4.html' %}#}
 {##}
@@ -60,6 +61,25 @@
 {#                        {% endif %}#}
 {#                    </div>#}
 {##}
+{#                    <div class="mb-3">#}
+{#                        <label for="{{ form.telegram_chat_id.id_for_label }}" class="form-label">Telegram Chat ID</label>#}
+{#                        {{ form.telegram_chat_id }}#}
+{#                        {% if form.telegram_chat_id.errors %}#}
+{#                            <div class="invalid-feedback d-block">#}
+{#                                {{ form.telegram_chat_id.errors }}#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                        <small class="form-text text-muted">#}
+{#                            #}
+{#                            <ol class="small">#}
+{#                                <li>Create a Telegram bot via BotFather</li>#}
+{#                                <li>Start a chat with your bot</li>#}
+{#                                <li>Visit: https://api.telegram.org/bot[YourBotToken]/getUpdates</li>#}
+{#                                <li>Find the 'chat.id' in the response</li>#}
+{#                            </ol>#}
+{#                        </small>#}
+{#                    </div>#}
+{##}
 {#                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">#}
 {#                        <a href="{% url 'payments:company-list' %}" class="btn btn-secondary me-md-2">Cancel</a>#}
 {#                        <button type="submit" class="btn btn-primary">#}
@@ -72,97 +92,418 @@
 {#    </div>#}
 {#</div>#}
 {#{% endblock %}#}
-
 {# templates/payments/company_form.html #}
 {% extends 'payments/base4.html' %}
 
-{% block title %}Add Company{% endblock %}
+{% block title %}Kompaniya Qo'shish{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
+    }
+    
+    body {
+        background-color: var(--light);
+        background-image: 
+            radial-gradient(circle at 90% 10%, rgba(255, 211, 105, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 10% 90%, rgba(0, 173, 181, 0.1) 0%, transparent 20%);
+        background-attachment: fixed;
+    }
+    
+    /* ===== HEADER DESIGN ===== */
+    .header-container {
+        padding: 0 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .page-header {
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--success);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .header-title h1 {
+        color: var(--light);
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .header-title h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background-color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        color: var(--primary);
+        font-size: 1.5rem;
+        transform: rotate(-5deg);
+        box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    /* ===== FORM CARD ===== */
+    .form-container {
+        padding: 0 2rem;
+    }
+    
+    .form-card {
+        background-color: white;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-header {
+        background-color: var(--primary);
+        color: var(--light);
+        padding: 1.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        opacity: 0.2;
+    }
+    
+    .form-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        position: relative;
+    }
+    
+    .form-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background-color: var(--accent);
+    }
+    
+    .form-body {
+        padding: 2rem;
+    }
+    
+    /* ===== FORM CONTROLS ===== */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary);
+    }
+    
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--primary);
+        background-color: #f9f9f9;
+        background-clip: padding-box;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-control:focus {
+        color: var(--primary);
+        background-color: #fff;
+        border-color: var(--accent);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 211, 105, 0.25);
+    }
+    
+    .form-text {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .required-field::after {
+        content: ' *';
+        color: var(--danger);
+    }
+    
+    /* ===== ERROR MESSAGES ===== */
+    .alert-danger {
+        color: var(--danger);
+        background-color: #fdede9;
+        border-color: #fcdbd3;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid transparent;
+        border-radius: 0.5rem;
+    }
+    
+    .invalid-feedback {
+        display: block;
+        width: 100%;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--danger);
+    }
+    
+    /* ===== FORM ACTIONS ===== */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+        gap: 0.5rem;
+    }
+    
+    .btn-primary {
+        color: var(--primary);
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+    
+    .btn-primary:hover {
+        background-color: #ffc840;
+        border-color: #ffc840;
+        box-shadow: 0 4px 10px rgba(255, 211, 105, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        color: white;
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+    
+    .btn-secondary:hover {
+        background-color: #424852;
+        border-color: #424852;
+        box-shadow: 0 4px 10px rgba(57, 62, 70, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    /* Apply form-control class to all form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--primary);
+        background-color: #f9f9f9;
+        background-clip: padding-box;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    input:focus,
+    textarea:focus {
+        color: var(--primary);
+        background-color: #fff;
+        border-color: var(--accent);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 211, 105, 0.25);
+    }
+    
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 768px) {
+        .header-container, .form-container {
+            padding: 0 1rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="mb-0">Add New Company</h2>
+    <div class="header-container">
+        <div class="page-header">
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h1>Kompaniya Qo'shish</h1>
             </div>
-            <div class="card-body">
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Yangi Kompaniya Ma'lumotlari</h2>
+            </div>
+            <div class="form-body">
                 <form method="post" novalidate>
                     {% csrf_token %}
                     
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
+                        <div class="alert-danger">
                             {{ form.non_field_errors }}
                         </div>
                     {% endif %}
 
-                    <div class="mb-3">
-                        <label for="{{ form.name.id_for_label }}" class="form-label">Company Name *</label>
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}" class="form-label required-field">Kompaniya Nomi</label>
                         {{ form.name }}
                         {% if form.name.errors %}
-                            <div class="invalid-feedback d-block">
+                            <div class="invalid-feedback">
                                 {{ form.name.errors }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Email Address *</label>
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}" class="form-label required-field">Email Manzil</label>
                         {{ form.email }}
                         {% if form.email.errors %}
-                            <div class="invalid-feedback d-block">
+                            <div class="invalid-feedback">
                                 {{ form.email.errors }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.contact_number.id_for_label }}" class="form-label">Contact Number *</label>
+                    <div class="form-group">
+                        <label for="{{ form.contact_number.id_for_label }}" class="form-label required-field">Telefon Raqam</label>
                         {{ form.contact_number }}
                         {% if form.contact_number.errors %}
-                            <div class="invalid-feedback d-block">
+                            <div class="invalid-feedback">
                                 {{ form.contact_number.errors }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.address.id_for_label }}" class="form-label">Address *</label>
+                    <div class="form-group">
+                        <label for="{{ form.address.id_for_label }}" class="form-label required-field">Manzil</label>
                         {{ form.address }}
                         {% if form.address.errors %}
-                            <div class="invalid-feedback d-block">
+                            <div class="invalid-feedback">
                                 {{ form.address.errors }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="{{ form.telegram_chat_id.id_for_label }}" class="form-label">Telegram Chat ID</label>
                         {{ form.telegram_chat_id }}
                         {% if form.telegram_chat_id.errors %}
-                            <div class="invalid-feedback d-block">
+                            <div class="invalid-feedback">
                                 {{ form.telegram_chat_id.errors }}
                             </div>
                         {% endif %}
-                        <small class="form-text text-muted">
-                            
-{#                            <ol class="small">#}
-{#                                <li>Create a Telegram bot via BotFather</li>#}
-{#                                <li>Start a chat with your bot</li>#}
-{#                                <li>Visit: https://api.telegram.org/bot[YourBotToken]/getUpdates</li>#}
-{#                                <li>Find the 'chat.id' in the response</li>#}
-{#                            </ol>#}
-                        </small>
                     </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{% url 'payments:company-list' %}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <div class="form-actions">
+                        <a href="{% url 'payments:company-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor Qilish
+                        </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Save Company
+                            <i class="fas fa-save"></i> Saqlash
                         </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

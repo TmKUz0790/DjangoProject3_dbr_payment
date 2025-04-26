@@ -1,276 +1,1071 @@
+{##}
+{#{% extends 'payments/base4.html' %}#}
+{#{% load humanize %}#}
+{##}
+{#{% block title %}Companies - Payment System{% endblock %}#}
+{##}
+{#{% block extra_css %}#}
+{#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">#}
+{#<style>#}
+{#    body {#}
+{#        background-color: #f8f9fa;#}
+{#    }#}
+{##}
+{#    .page-header {#}
+{#        padding: 2rem 0;#}
+{#        margin-bottom: 2rem;#}
+{#        border-bottom: 1px solid #dee2e6;#}
+{#        display: flex;#}
+{#        justify-content: space-between;#}
+{#        align-items: center;#}
+{#    }#}
+{##}
+{#    /* Search styles */#}
+{#    .search-wrapper {#}
+{#        position: relative;#}
+{#        max-width: 300px;#}
+{#    }#}
+{##}
+{#    .search-input {#}
+{#        width: 100%;#}
+{#        padding: 0.5rem 2rem 0.5rem 0.75rem;#}
+{#        font-size: 0.95rem;#}
+{#        border: none;#}
+{#        border-bottom: 1px solid #dee2e6;#}
+{#        background-color: transparent;#}
+{#        transition: border-color 0.2s ease;#}
+{#    }#}
+{##}
+{#    .search-input:focus {#}
+{#        outline: none;#}
+{#        border-bottom-color: #007bff;#}
+{#    }#}
+{##}
+{#    .search-input::placeholder {#}
+{#        color: #adb5bd;#}
+{#        font-size: 0.9rem;#}
+{#    }#}
+{##}
+{#    .search-icon {#}
+{#        position: absolute;#}
+{#        right: 0.5rem;#}
+{#        top: 50%;#}
+{#        transform: translateY(-50%);#}
+{#        color: #adb5bd;#}
+{#        font-size: 0.9rem;#}
+{#    }#}
+{##}
+{#    /* Horizontal scroll container */#}
+{#    .companies-scroll-container {#}
+{#        width: 100%;#}
+{#        overflow-x: auto;#}
+{#        padding: 1rem 0;#}
+{#        -webkit-overflow-scrolling: touch;#}
+{#        scrollbar-width: thin;#}
+{#        scrollbar-color: #007bff #f8f9fa;#}
+{#    }#}
+{##}
+{#    .companies-scroll-container::-webkit-scrollbar {#}
+{#        height: 6px;#}
+{#    }#}
+{##}
+{#    .companies-scroll-container::-webkit-scrollbar-track {#}
+{#        background: #f8f9fa;#}
+{#        border-radius: 3px;#}
+{#    }#}
+{##}
+{#    .companies-scroll-container::-webkit-scrollbar-thumb {#}
+{#        background-color: #007bff;#}
+{#        border-radius: 3px;#}
+{#    }#}
+{##}
+{#    /* Horizontal row of cards */#}
+{#    .companies-row {#}
+{#        display: inline-flex;#}
+{#        gap: 1.5rem;#}
+{#        padding: 0.5rem;#}
+{#        min-width: min-content;#}
+{#    }#}
+{##}
+{#    .company-item {#}
+{#        width: 400px;#}
+{#        flex-shrink: 0;#}
+{#    }#}
+{##}
+{#    .company-card {#}
+{#        background-color: #fff;#}
+{#        border: 1px solid #e9ecef;#}
+{#        border-radius: 8px;#}
+{#        overflow: hidden;#}
+{#        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);#}
+{#        transition: transform 0.2s ease, box-shadow 0.2s ease;#}
+{#        height: 100%;#}
+{#    }#}
+{##}
+{#    .company-card:hover {#}
+{#        transform: translateY(-2px);#}
+{#        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#    }#}
+{##}
+{#    .card-header {#}
+{#        background-color: #f0f0f5;#}
+{#        padding: 1rem 1.5rem;#}
+{#        border-bottom: 1px solid #e9ecef;#}
+{#    }#}
+{##}
+{#    .card-body {#}
+{#        padding: 1.5rem;#}
+{#        display: grid;#}
+{#        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));#}
+{#        gap: 1rem;#}
+{#    }#}
+{##}
+{#    .stat-item {#}
+{#        text-align: left;#}
+{#    }#}
+{##}
+{#    .stat-item i {#}
+{#        font-size: 1.5rem;#}
+{#        margin-bottom: 0.5rem;#}
+{#        color: #6c757d;#}
+{#    }#}
+{##}
+{#    .stat-item h6 {#}
+{#        color: #495057;#}
+{#        margin-bottom: 0.25rem;#}
+{#        font-weight: 500;#}
+{#        font-size: 0.9rem;#}
+{#    }#}
+{##}
+{#    .stat-item .value {#}
+{#        font-weight: 600;#}
+{#        font-size: 1.1rem;#}
+{#        color: #343a40;#}
+{#    }#}
+{##}
+{#    .company-info {#}
+{#        padding: 1rem 1.5rem;#}
+{#        border-top: 1px solid #e9ecef;#}
+{#        background-color: #fff;#}
+{#        font-size: 0.85rem;#}
+{#    }#}
+{##}
+{#    .info-item {#}
+{#        margin-bottom: 0.25rem;#}
+{#    }#}
+{##}
+{#    .info-item strong {#}
+{#        font-weight: 500;#}
+{#        margin-right: 0.25rem;#}
+{#        color: #495057;#}
+{#    }#}
+{##}
+{#    .card-actions {#}
+{#        display: flex;#}
+{#        justify-content: space-between;#}
+{#        padding: 1rem 1.5rem;#}
+{#        border-top: 1px solid #e9ecef;#}
+{#        flex-wrap: wrap;#}
+{#        gap: 0.5rem;#}
+{#    }#}
+{##}
+{#    .card-actions .btn {#}
+{#        margin: 0;#}
+{#        font-size: 0.9rem;#}
+{#        padding: 0.375rem 0.75rem;#}
+{#    }#}
+{##}
+{#    .due {#}
+{#        color: red;#}
+{#        font-weight: bold;#}
+{#    }#}
+{##}
+{#    .not-due {#}
+{#        color: green;#}
+{#        font-weight: bold;#}
+{#    }#}
+{##}
+{#    .partial {#}
+{#        color: orange;#}
+{#        font-weight: bold;#}
+{#    }#}
+{##}
+{#    #noResults, #noCompanies {#}
+{#        padding: 2rem;#}
+{#        text-align: center;#}
+{#        font-size: 1.1rem;#}
+{#        color: #6c757d;#}
+{#        background-color: white;#}
+{#        border-radius: 8px;#}
+{#        margin: 1rem 0;#}
+{#        width: 100%;#}
+{#    }#}
+{#</style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="page-header">#}
+{#        <h1>Companies</h1>#}
+{#        <div class="search-wrapper">#}
+{#            <input #}
+{#                type="text" #}
+{#                id="companySearch" #}
+{#                class="search-input" #}
+{#                placeholder="Search companies..."#}
+{#                aria-label="Search companies"#}
+{#            >#}
+{#            <i class="fas fa-search search-icon"></i>#}
+{#        </div>#}
+{#    </div>#}
+{#    #}
+{##}
+{#    <div class="companies-scroll-container">#}
+{#        <div class="companies-row" id="companiesContainer">#}
+{#            {% if companies %}#}
+{#                {% for company_info in companies %}#}
+{#                    <div class="company-item" data-company-name="{{ company_info.company.name|lower }}">#}
+{#                        <div class="company-card">#}
+{#                            <div class="card-header">#}
+{#                                <h3>{{ company_info.company.name }}</h3>#}
+{#                            </div>#}
+{#                            <div class="card-body">#}
+{#                                <div class="stat-item">#}
+{#                                    <i class="fas fa-hand-holding-usd"></i>#}
+{#                                    <h6>Total Agreement</h6>#}
+{#                                    <div class="value">${{ company_info.total_to_pay|intcomma }}</div>#}
+{#                                </div>#}
+{#                                <div class="stat-item">#}
+{#                                    <i class="fas fa-money-bill-wave"></i>#}
+{#                                    <h6>Total Paid</h6>#}
+{#                                    <div class="value">${{ company_info.total_paid|intcomma }}</div>#}
+{#                                </div>#}
+{#                                <div class="stat-item">#}
+{#                                    <i class="fas fa-exclamation-triangle"></i>#}
+{#                                    <h6>Current Due</h6>#}
+{#                                    <div class="value {% if company_info.current_due > 0 %}due{% else %}not-due{% endif %}">#}
+{#                                        ${{ company_info.current_due|intcomma }}#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="company-info">#}
+{#                                {% if company_info.company.address %}#}
+{#                                    <div class="info-item"><strong>Address:</strong> {{ company_info.company.address }}</div>#}
+{#                                {% endif %}#}
+{#                                {% if company_info.company.phone_number %}#}
+{#                                    <div class="info-item"><strong>Phone:</strong> {{ company_info.company.phone_number }}</div>#}
+{#                                {% endif %}#}
+{#                                {% if company_info.company.email %}#}
+{#                                    <div class="info-item"><strong>Email:</strong> {{ company_info.company.email }}</div>#}
+{#                                {% endif %}#}
+{#                            </div>#}
+{#                            <div class="card-actions">#}
+{#                                <a href="{% url 'payments:company-detail' company_info.company.pk %}" class="btn btn-primary">View Details</a>#}
+{#                                <a href="{% url 'payments:company-monthly-payments' company_info.company.pk %}" class="btn btn-info">View Monthly Payments</a>#}
+{#                                <a href="{% url 'payments:delete-company' company_info.company.pk %}" class="btn btn-danger">#}
+{#                                    <i class="fas fa-trash"></i> Delete#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            {% else %}#}
+{#                <p id="noResults" class="d-none">No companies found matching your search.</p>#}
+{#                <p id="noCompanies">No companies found.</p>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function() {#}
+{#            const searchInput = document.getElementById('companySearch');#}
+{#            const companies = document.getElementsByClassName('company-item');#}
+{#            const noResults = document.getElementById('noResults');#}
+{#            const noCompanies = document.getElementById('noCompanies');#}
+{##}
+{#            searchInput.addEventListener('input', function(e) {#}
+{#                const searchTerm = e.target.value.toLowerCase().trim();#}
+{#                let visibleCount = 0;#}
+{##}
+{#                Array.from(companies).forEach(company => {#}
+{#                    const companyName = company.dataset.companyName;#}
+{#                    if (companyName.includes(searchTerm)) {#}
+{#                        company.style.display = '';#}
+{#                        visibleCount++;#}
+{#                    } else {#}
+{#                        company.style.display = 'none';#}
+{#                    }#}
+{#                });#}
+{##}
+{#                if (companies.length > 0) {#}
+{#                    noResults.classList.toggle('d-none', visibleCount > 0);#}
+{#                    noCompanies.classList.add('d-none');#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
 
 {% extends 'payments/base4.html' %}
 {% load humanize %}
 
-{% block title %}Companies - Payment System{% endblock %}
+{% block title %}Kompaniyalar - To'lov Tizimi{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    body {
-        background-color: #f8f9fa;
+    :root {
+        --primary: #222831;
+        --secondary: #393E46;
+        --accent: #FFD369;
+        --light: #EEEEEE;
+        --success: #00ADB5;
+        --danger: #FF5722;
+        --warning: #FFA000;
     }
-
+    
+    body {
+        background-color: var(--light);
+        background-image: 
+            radial-gradient(circle at 90% 10%, rgba(255, 211, 105, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 10% 90%, rgba(0, 173, 181, 0.1) 0%, transparent 20%);
+        background-attachment: fixed;
+    }
+    
+    /* ===== HEADER DESIGN ===== */
+    .header-container {
+        padding: 0 2rem;
+        margin-bottom: 3rem;
+    }
+    
     .page-header {
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid #dee2e6;
+        background-color: var(--primary);
+        padding: 2rem 2.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        z-index: 10;
     }
-
-    /* Search styles */
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background-color: var(--accent);
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 120px;
+        background-color: var(--success);
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+        opacity: 0.2;
+        z-index: -1;
+    }
+    
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .header-title h1 {
+        color: var(--light);
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .header-title h1::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--accent);
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        background-color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        color: var(--primary);
+        font-size: 1.5rem;
+        transform: rotate(-5deg);
+        box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    /* ===== SEARCH BAR ===== */
     .search-wrapper {
         position: relative;
         max-width: 300px;
+        width: 100%;
     }
-
+    
     .search-input {
         width: 100%;
-        padding: 0.5rem 2rem 0.5rem 0.75rem;
-        font-size: 0.95rem;
+        background-color: var(--secondary);
+        color: var(--light);
         border: none;
-        border-bottom: 1px solid #dee2e6;
-        background-color: transparent;
-        transition: border-color 0.2s ease;
+        padding: 0.8rem 1rem 0.8rem 3rem;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-
+    
     .search-input:focus {
         outline: none;
-        border-bottom-color: #007bff;
+        box-shadow: 0 0 0 2px var(--accent);
     }
-
+    
     .search-input::placeholder {
-        color: #adb5bd;
-        font-size: 0.9rem;
+        color: rgba(238, 238, 238, 0.6);
     }
-
+    
     .search-icon {
         position: absolute;
-        right: 0.5rem;
+        left: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #adb5bd;
-        font-size: 0.9rem;
+        color: var(--accent);
+        font-size: 1rem;
     }
-
-    /* Horizontal scroll container */
-    .companies-scroll-container {
-        width: 100%;
-        overflow-x: auto;
-        padding: 1rem 0;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: #007bff #f8f9fa;
+    
+    /* ===== VIEW TOGGLE BUTTON ===== */
+    .view-toggle {
+        background-color: var(--secondary);
+        border: none;
+        color: var(--light);
+        border-radius: 0.5rem;
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
     }
-
-    .companies-scroll-container::-webkit-scrollbar {
-        height: 6px;
+    
+    .view-toggle:hover {
+        background-color: #424852;
     }
-
-    .companies-scroll-container::-webkit-scrollbar-track {
-        background: #f8f9fa;
-        border-radius: 3px;
+    
+    .view-toggle i {
+        color: var(--accent);
     }
-
-    .companies-scroll-container::-webkit-scrollbar-thumb {
-        background-color: #007bff;
-        border-radius: 3px;
+    
+    /* ===== COMPANIES LAYOUT ===== */
+    .companies-container {
+        padding: 0 2rem;
     }
-
-    /* Horizontal row of cards */
-    .companies-row {
-        display: inline-flex;
-        gap: 1.5rem;
-        padding: 0.5rem;
-        min-width: min-content;
-    }
-
-    .company-item {
-        width: 400px;
-        flex-shrink: 0;
-    }
-
-    .company-card {
-        background-color: #fff;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 100%;
-    }
-
-    .company-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-header {
-        background-color: #f0f0f5;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .card-body {
-        padding: 1.5rem;
+    
+    /* Grid View */
+    .companies-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 2rem;
+    }
+    
+    /* List View */
+    .companies-list {
+        display: flex;
+        flex-direction: column;
         gap: 1rem;
     }
-
-    .stat-item {
+    
+    .companies-list .company-item {
+        margin-bottom: 1rem;
+    }
+    
+    .companies-list .company-card {
+        display: flex;
+        flex-direction: column;
+        transform: none !important;
+    }
+    
+    .companies-list .company-card:hover {
+        transform: none !important;
+    }
+    
+    .companies-list .card-row {
+        display: flex;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .companies-list .card-row:last-child {
+        border-bottom: none;
+    }
+    
+    .companies-list .card-header {
+        width: 25%;
+        min-width: 200px;
+        border-radius: 0.5rem 0 0 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .companies-list .card-header h3 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .companies-list .stats-container {
+        flex: 1;
+        min-width: 300px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: center;
+        background-color: white;
+    }
+    
+    .companies-list .stat-box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
         text-align: left;
+        min-width: auto;
     }
-
-    .stat-item i {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #6c757d;
+    
+    .companies-list .stat-box::before {
+        width: 5px;
+        height: 100%;
+        left: 0;
+        top: 0;
     }
-
-    .stat-item h6 {
-        color: #495057;
+    
+    .companies-list .stat-icon {
+        margin-bottom: 0;
+    }
+    
+    .companies-list .stat-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .companies-list .stat-label {
         margin-bottom: 0.25rem;
-        font-weight: 500;
-        font-size: 0.9rem;
     }
-
-    .stat-item .value {
-        font-weight: 600;
-        font-size: 1.1rem;
-        color: #343a40;
-    }
-
-    .company-info {
+    
+    .companies-list .company-info {
+        width: 100%;
         padding: 1rem 1.5rem;
-        border-top: 1px solid #e9ecef;
-        background-color: #fff;
-        font-size: 0.85rem;
+        background-color: #f9f9f9;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        border-top: none;
     }
-
+    
+    .companies-list .info-item {
+        margin-bottom: 0;
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .companies-list .card-actions {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background-color: white;
+        gap: 1rem;
+    }
+    
+    .companies-list .btn-custom {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    /* ===== COMPANY CARD ===== */
+    .company-card {
+        background-color: white;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        background-color: var(--primary);
+        color: var(--light);
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        opacity: 0.2;
+    }
+    
+    .card-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .card-header h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background-color: var(--accent);
+    }
+    
+    /* ===== STATS DISPLAY ===== */
+    .stats-container {
+        padding: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        flex-grow: 1;
+    }
+    
+    .stat-box {
+        flex: 1;
+        min-width: calc(33.333% - 1rem);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: #f9f9f9;
+        border-radius: 0.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+    }
+    
+    .total-agreement::before {
+        background-color: var(--accent);
+    }
+    
+    .total-paid::before {
+        background-color: var(--success);
+    }
+    
+    .current-due::before {
+        background-color: var(--danger);
+    }
+    
+    .stat-icon {
+        margin-bottom: 0.75rem;
+        position: relative;
+    }
+    
+    .stat-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .total-agreement .stat-icon i {
+        color: var(--accent);
+    }
+    
+    .total-paid .stat-icon i {
+        color: var(--success);
+    }
+    
+    .current-due .stat-icon i {
+        color: var(--danger);
+    }
+    
+    .stat-label {
+        color: var(--secondary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+    
+    .due {
+        color: var(--danger);
+    }
+    
+    .not-due {
+        color: var(--success);
+    }
+    
+    /* ===== COMPANY INFO ===== */
+    .company-info {
+        padding: 1.5rem;
+        background-color: #f9f9f9;
+        border-top: 1px solid #eee;
+    }
+    
     .info-item {
-        margin-bottom: 0.25rem;
+        display: flex;
+        margin-bottom: 0.75rem;
     }
-
-    .info-item strong {
-        font-weight: 500;
-        margin-right: 0.25rem;
-        color: #495057;
+    
+    .info-item:last-child {
+        margin-bottom: 0;
     }
-
+    
+    .info-icon {
+        width: 24px;
+        color: var(--primary);
+        opacity: 0.7;
+        margin-right: 1rem;
+    }
+    
+    .info-content {
+        flex: 1;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: var(--secondary);
+        margin-right: 0.5rem;
+    }
+    
+    .info-value {
+        color: var(--primary);
+    }
+    
+    /* ===== ACTION BUTTONS ===== */
     .card-actions {
         display: flex;
-        justify-content: space-between;
-        padding: 1rem 1.5rem;
-        border-top: 1px solid #e9ecef;
         flex-wrap: wrap;
         gap: 0.5rem;
+        padding: 1.5rem;
     }
-
-    .card-actions .btn {
-        margin: 0;
-        font-size: 0.9rem;
-        padding: 0.375rem 0.75rem;
+    
+    .btn-custom {
+        flex: 1;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        min-width: 100px;
     }
-
-    .due {
-        color: red;
-        font-weight: bold;
+    
+    .btn-details {
+        background-color: var(--accent);
+        color: var(--primary);
     }
-
-    .not-due {
-        color: green;
-        font-weight: bold;
+    
+    .btn-details:hover {
+        background-color: #ffc840;
+        box-shadow: 0 4px 10px rgba(255, 211, 105, 0.3);
     }
-
-    .partial {
-        color: orange;
-        font-weight: bold;
+    
+    .btn-payments {
+        background-color: var(--success);
+        color: white;
     }
-
+    
+    .btn-payments:hover {
+        background-color: #00c2cc;
+        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
+    }
+    
+    .btn-delete {
+        background-color: var(--danger);
+        color: white;
+    }
+    
+    .btn-delete:hover {
+        background-color: #ff7043;
+        box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+    }
+    
+    .btn-custom i {
+        font-size: 1rem;
+    }
+    
+    /* ===== EMPTY STATES ===== */
     #noResults, #noCompanies {
-        padding: 2rem;
         text-align: center;
-        font-size: 1.1rem;
-        color: #6c757d;
+        padding: 3rem 2rem;
         background-color: white;
-        border-radius: 8px;
-        margin: 1rem 0;
+        border-radius: 0.5rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
         width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .empty-icon {
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background-color: #f9f9f9;
+        border-radius: 50%;
+        line-height: 70px;
+        font-size: 2rem;
+        color: var(--secondary);
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-message {
+        font-size: 1.2rem;
+        color: var(--secondary);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .empty-description {
+        color: #888;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 768px) {
+        .header-container, .companies-container {
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            padding: 1.5rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .header-controls {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .search-wrapper {
+            max-width: 100%;
+            flex: 1;
+        }
+        
+        .companies-list .stats-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .companies-list .stat-box {
+            width: 100%;
+        }
+        
+        .stat-box {
+            min-width: 100%;
+        }
+        
+        .card-actions {
+            flex-direction: column;
+        }
+        
+        .btn-custom {
+            width: 100%;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Companies</h1>
-        <div class="search-wrapper">
-            <input 
-                type="text" 
-                id="companySearch" 
-                class="search-input" 
-                placeholder="Search companies..."
-                aria-label="Search companies"
-            >
-            <i class="fas fa-search search-icon"></i>
+    <div class="header-container">
+        <div class="page-header">
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h1>Kompaniyalar</h1>
+            </div>
+            <div class="header-controls">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="companySearch" 
+                        class="search-input" 
+                        placeholder="Kompaniyalarni qidirish..."
+                        aria-label="Kompaniyalarni qidirish"
+                    >
+                </div>
+                <button id="viewToggle" class="view-toggle">
+                    <i class="fas fa-list"></i>
+                    <span id="viewToggleText">Qator ko'rinish</span>
+                </button>
+            </div>
         </div>
     </div>
-    
 
-    <div class="companies-scroll-container">
-        <div class="companies-row" id="companiesContainer">
+    <div class="companies-container">
+        <div class="companies-grid" id="companiesContainer">
             {% if companies %}
                 {% for company_info in companies %}
                     <div class="company-item" data-company-name="{{ company_info.company.name|lower }}">
                         <div class="company-card">
-                            <div class="card-header">
-                                <h3>{{ company_info.company.name }}</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="stat-item">
-                                    <i class="fas fa-hand-holding-usd"></i>
-                                    <h6>Total Agreement</h6>
-                                    <div class="value">${{ company_info.total_to_pay|intcomma }}</div>
+                            <div class="card-row">
+                                <div class="card-header">
+                                    <h3>{{ company_info.company.name }}</h3>
                                 </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    <h6>Total Paid</h6>
-                                    <div class="value">${{ company_info.total_paid|intcomma }}</div>
-                                </div>
-                                <div class="stat-item">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <h6>Current Due</h6>
-                                    <div class="value {% if company_info.current_due > 0 %}due{% else %}not-due{% endif %}">
-                                        ${{ company_info.current_due|intcomma }}
+                                <div class="stats-container">
+                                    <div class="stat-box total-agreement">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-hand-holding-usd"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-label">Jami Shartnoma</div>
+                                            <div class="stat-value">${{ company_info.total_to_pay|intcomma }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-box total-paid">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-label">Jami To'langan</div>
+                                            <div class="stat-value">${{ company_info.total_paid|intcomma }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-box current-due">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-label">Joriy Qarz</div>
+                                            <div class="stat-value {% if company_info.current_due > 0 %}due{% else %}not-due{% endif %}">
+                                                ${{ company_info.current_due|intcomma }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="company-info">
                                 {% if company_info.company.address %}
-                                    <div class="info-item"><strong>Address:</strong> {{ company_info.company.address }}</div>
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <span class="info-label">Manzil:</span>
+                                            <span class="info-value">{{ company_info.company.address }}</span>
+                                        </div>
+                                    </div>
                                 {% endif %}
                                 {% if company_info.company.phone_number %}
-                                    <div class="info-item"><strong>Phone:</strong> {{ company_info.company.phone_number }}</div>
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <span class="info-label">Telefon:</span>
+                                            <span class="info-value">{{ company_info.company.phone_number }}</span>
+                                        </div>
+                                    </div>
                                 {% endif %}
                                 {% if company_info.company.email %}
-                                    <div class="info-item"><strong>Email:</strong> {{ company_info.company.email }}</div>
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <span class="info-label">Email:</span>
+                                            <span class="info-value">{{ company_info.company.email }}</span>
+                                        </div>
+                                    </div>
                                 {% endif %}
                             </div>
                             <div class="card-actions">
-                                <a href="{% url 'payments:company-detail' company_info.company.pk %}" class="btn btn-primary">View Details</a>
-                                <a href="{% url 'payments:company-monthly-payments' company_info.company.pk %}" class="btn btn-info">View Monthly Payments</a>
-                                <a href="{% url 'payments:delete-company' company_info.company.pk %}" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Delete
+                                <a href="{% url 'payments:company-detail' company_info.company.pk %}" class="btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i> Batafsil
+                                </a>
+                                <a href="{% url 'payments:company-monthly-payments' company_info.company.pk %}" class="btn-custom btn-payments">
+                                    <i class="fas fa-calendar-alt"></i> Oylik To'lovlar
+                                </a>
+                                <a href="{% url 'payments:delete-company' company_info.company.pk %}" class="btn-custom btn-delete">
+                                    <i class="fas fa-trash"></i> O'chirish
                                 </a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p id="noResults" class="d-none">No companies found matching your search.</p>
-                <p id="noCompanies">No companies found.</p>
+                <div id="noResults" class="d-none">
+                    <div class="empty-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="empty-message">Qidiruv natijasi topilmadi</div>
+                    <div class="empty-description">Boshqa kalit so'z bilan qidirib ko'ring</div>
+                </div>
+                <div id="noCompanies">
+                    <div class="empty-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="empty-message">Hech qanday kompaniya topilmadi</div>
+                    <div class="empty-description">Yangi kompaniya qo'shish uchun yuqoridagi menyudan foydalaning</div>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -281,7 +1076,94 @@
             const companies = document.getElementsByClassName('company-item');
             const noResults = document.getElementById('noResults');
             const noCompanies = document.getElementById('noCompanies');
-
+            const viewToggle = document.getElementById('viewToggle');
+            const viewToggleText = document.getElementById('viewToggleText');
+            const viewToggleIcon = viewToggle.querySelector('i');
+            const companiesContainer = document.getElementById('companiesContainer');
+            
+            // View Toggle Functionality
+            let isGridView = true;
+            
+            function updateLayout() {
+                const companyCards = document.querySelectorAll('.company-card');
+                
+                if (isGridView) {
+                    companiesContainer.classList.remove('companies-list');
+                    companiesContainer.classList.add('companies-grid');
+                    viewToggleText.textContent = 'Qator ko\'rinish';
+                    viewToggleIcon.classList.remove('fa-th-large');
+                    viewToggleIcon.classList.add('fa-list');
+                    
+                    // Reset the stat contents in grid view
+                    companyCards.forEach(card => {
+                        const statBoxes = card.querySelectorAll('.stat-box');
+                        statBoxes.forEach(box => {
+                            const statContent = box.querySelector('.stat-content');
+                            if (statContent) {
+                                const label = statContent.querySelector('.stat-label');
+                                const value = statContent.querySelector('.stat-value');
+                                box.innerHTML = '';
+                                
+                                const icon = box.querySelector('.stat-icon');
+                                if (!icon) {
+                                    const iconDiv = document.createElement('div');
+                                    iconDiv.className = 'stat-icon';
+                                    iconDiv.innerHTML = box.classList.contains('total-agreement') ? 
+                                        '<i class="fas fa-hand-holding-usd"></i>' : 
+                                        box.classList.contains('total-paid') ? 
+                                            '<i class="fas fa-money-bill-wave"></i>' : 
+                                            '<i class="fas fa-exclamation-triangle"></i>';
+                                    box.appendChild(iconDiv);
+                                }
+                                
+                                box.appendChild(label);
+                                box.appendChild(value);
+                            }
+                        });
+                    });
+                } else {
+                    companiesContainer.classList.remove('companies-grid');
+                    companiesContainer.classList.add('companies-list');
+                    viewToggleText.textContent = 'Blok ko\'rinish';
+                    viewToggleIcon.classList.remove('fa-list');
+                    viewToggleIcon.classList.add('fa-th-large');
+                    
+                    // Restructure the stat boxes for list view
+                    companyCards.forEach(card => {
+                        const statBoxes = card.querySelectorAll('.stat-box');
+                        statBoxes.forEach(box => {
+                            // Only modify if not already in list format
+                            if (!box.querySelector('.stat-content')) {
+                                const icon = box.querySelector('.stat-icon');
+                                const label = box.querySelector('.stat-label');
+                                const value = box.querySelector('.stat-value');
+                                
+                                if (icon && label && value) {
+                                    // Remove the elements from their current position
+                                    box.removeChild(label);
+                                    box.removeChild(value);
+                                    
+                                    // Create a container for label and value
+                                    const contentDiv = document.createElement('div');
+                                    contentDiv.className = 'stat-content';
+                                    contentDiv.appendChild(label);
+                                    contentDiv.appendChild(value);
+                                    
+                                    // Add the content container back to the box
+                                    box.appendChild(contentDiv);
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+            
+            viewToggle.addEventListener('click', function() {
+                isGridView = !isGridView;
+                updateLayout();
+            });
+            
+            // Search Functionality
             searchInput.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase().trim();
                 let visibleCount = 0;
