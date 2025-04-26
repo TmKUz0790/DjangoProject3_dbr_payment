@@ -8,7 +8,7 @@
 {#    <title>{% block title %}To'lovlarni Boshqarish Tizimi{% endblock %}</title>#}
 {#    #}
 {#    <!-- Google Fonts -->#}
-{#    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">#}
 {#    <!-- Bootstrap CSS -->#}
 {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">#}
 {#    <!-- Font Awesome -->#}
@@ -16,155 +16,322 @@
 {#    #}
 {#    <style>#}
 {#        :root {#}
-{#            --primary-color: #0D47A1;#}
-{#            --secondary-color: #5E35B1;#}
-{#            --accent-color: #00BCD4;#}
-{#            --success-color: #00796B;#}
-{#            --warning-color: #FF8F00;#}
-{#            --danger-color: #C62828;#}
-{#            --light-color: #F5F5F5;#}
-{#            --dark-color: #263238;#}
-{#            --primary-bg: #E8EAF6;#}
-{#            --nav-bg: linear-gradient(135deg, var(--primary-color), var(--secondary-color));#}
-{#            --nav-text: #ffffff;#}
+{#            --primary: #222831;#}
+{#            --secondary: #393E46;#}
+{#            --accent: #FFD369;#}
+{#            --light: #EEEEEE;#}
+{#            --success: #00ADB5;#}
+{#            --danger: #FF5722;#}
+{#            --warning: #FFA000;#}
 {#        }#}
 {##}
 {#        body {#}
-{#            font-family: 'Montserrat', sans-serif;#}
-{#            background-color: var(--primary-bg);#}
+{#            font-family: 'Mulish', sans-serif;#}
+{#            background-color: var(--light);#}
+{#            background-image: #}
+{#                radial-gradient(circle at 90% 10%, rgba(255, 211, 105, 0.1) 0%, transparent 20%),#}
+{#                radial-gradient(circle at 10% 90%, rgba(0, 173, 181, 0.1) 0%, transparent 20%);#}
+{#            background-attachment: fixed;#}
 {#            min-height: 100vh;#}
+{#            color: var(--primary);#}
 {#        }#}
 {##}
+{#        /* ===== NAVBAR STYLES ===== */#}
 {#        .navbar {#}
-{#            background: var(--nav-bg);#}
-{#            box-shadow: 0 4px 12px rgba(0,0,0,0.15);#}
-{#            padding: 1rem 0;#}
+{#            background: transparent;#}
+{#            padding: 1.2rem 0;#}
+{#            position: relative;#}
+{#            z-index: 20;#}
+{#        }#}
+{#        #}
+{#        .navbar::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            top: 0;#}
+{#            left: 0;#}
+{#            width: 100%;#}
+{#            height: 100%;#}
+{#            background: var(--primary);#}
+{#            clip-path: polygon(0 0, 100% 0, 100% 70%, 0% 100%);#}
+{#            z-index: -1;#}
+{#        }#}
+{#        #}
+{#        .navbar::after {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            top: 5px;#}
+{#            left: 0;#}
+{#            width: 100%;#}
+{#            height: 100%;#}
+{#            background: var(--accent);#}
+{#            clip-path: polygon(0 0, 100% 0, 100% 75%, 0% 95%);#}
+{#            z-index: -2;#}
+{#            opacity: 0.2;#}
 {#        }#}
 {##}
 {#        .navbar-brand {#}
-{#            font-weight: 700;#}
-{#            font-size: 1.4rem;#}
-{#            color: var(--nav-text) !important;#}
-{#            display: flex;#}
-{#            align-items: center;#}
-{#            gap: 0.8rem;#}
+{#            font-weight: 800;#}
+{#            font-size: 1.5rem;#}
+{#            color: white !important;#}
+{#            position: relative;#}
+{#            padding-left: 3.5rem;#}
 {#        }#}
-{##}
-{#        .brand-icon {#}
-{#            background-color: rgba(255, 255, 255, 0.2);#}
-{#            width: 38px;#}
-{#            height: 38px;#}
-{#            border-radius: 50%;#}
+{#        #}
+{#        .brand-icon-wrapper {#}
+{#            position: absolute;#}
+{#            left: 0;#}
+{#            top: 50%;#}
+{#            transform: translateY(-50%);#}
+{#            width: 45px;#}
+{#            height: 45px;#}
+{#            background: rgba(255, 255, 255, 0.2);#}
+{#            border-radius: 12px;#}
 {#            display: flex;#}
 {#            align-items: center;#}
 {#            justify-content: center;#}
+{#            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);#}
 {#        }#}
 {##}
 {#        .nav-link {#}
-{#            color: rgba(255,255,255,0.9) !important;#}
-{#            font-weight: 500;#}
-{#            padding: 0.6rem 1.2rem !important;#}
-{#            border-radius: 8px;#}
+{#            color: rgba(255, 255, 255, 0.85) !important;#}
+{#            font-weight: 600;#}
+{#            padding: 0.7rem 1.3rem !important;#}
+{#            border-radius: 12px;#}
+{#            position: relative;#}
+{#            z-index: 1;#}
 {#            transition: all 0.3s ease;#}
+{#            margin: 0 0.3rem;#}
 {#            display: flex;#}
 {#            align-items: center;#}
 {#            gap: 0.6rem;#}
-{#            margin: 0 0.3rem;#}
 {#        }#}
-{##}
+{#        #}
+{#        .nav-link::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            bottom: 0;#}
+{#            left: 0;#}
+{#            width: 100%;#}
+{#            height: 0;#}
+{#            background: rgba(255, 255, 255, 0.15);#}
+{#            z-index: -1;#}
+{#            transition: all 0.3s ease;#}
+{#            border-radius: 12px;#}
+{#        }#}
+{#        #}
+{#        .nav-link:hover::before {#}
+{#            height: 100%;#}
+{#        }#}
+{#        #}
 {#        .nav-link:hover {#}
-{#            background: rgba(255,255,255,0.15);#}
-{#            color: #ffffff !important;#}
-{#            transform: translateY(-2px);#}
+{#            transform: translateY(-3px);#}
+{#            color: white !important;#}
+{#            text-decoration: none;#}
 {#        }#}
-{##}
+{#        #}
 {#        .nav-link.active {#}
-{#            background: rgba(255,255,255,0.25);#}
-{#            color: #ffffff !important;#}
-{#            box-shadow: 0 4px 8px rgba(0,0,0,0.1);#}
+{#            background: rgba(255, 255, 255, 0.2);#}
+{#            color: white !important;#}
+{#            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);#}
 {#        }#}
 {##}
 {#        .navbar-toggler {#}
 {#            border: none;#}
-{#            color: white;#}
-{#            padding: 0.5rem;#}
+{#            color: white !important;#}
+{#            font-size: 1.5rem;#}
+{#            padding: 0.4rem;#}
+{#            background: rgba(255, 255, 255, 0.1);#}
+{#            border-radius: 8px;#}
 {#        }#}
-{##}
+{#        #}
 {#        .navbar-toggler:focus {#}
 {#            box-shadow: none;#}
 {#        }#}
 {##}
+{#        /* ===== MAIN CONTENT ===== */#}
 {#        .main-content {#}
+{#            position: relative;#}
 {#            padding: 2rem 0;#}
+{#            margin-top: 1rem;#}
 {#        }#}
-{##}
-{#        .btn {#}
-{#            font-weight: 500;#}
-{#            padding: 0.6rem 1.5rem;#}
-{#            border-radius: 8px;#}
-{#            transition: all 0.3s ease;#}
-{#            box-shadow: 0 2px 5px rgba(0,0,0,0.1);#}
-{#        }#}
-{##}
-{#        .btn:hover {#}
-{#            transform: translateY(-2px);#}
-{#            box-shadow: 0 4px 10px rgba(0,0,0,0.15);#}
-{#        }#}
-{##}
-{#        .btn-primary {#}
-{#            background: var(--primary-color);#}
-{#            border-color: var(--primary-color);#}
-{#        }#}
-{##}
-{#        .btn-primary:hover {#}
-{#            background: #0A3D8F;#}
-{#            border-color: #0A3D8F;#}
-{#        }#}
-{##}
-{#        .btn-secondary {#}
-{#            background: var(--secondary-color);#}
-{#            border-color: var(--secondary-color);#}
-{#        }#}
-{##}
-{#        .btn-secondary:hover {#}
-{#            background: #4527A0;#}
-{#            border-color: #4527A0;#}
-{#        }#}
-{##}
-{#        .card {#}
-{#            border-radius: 1rem;#}
+{#        #}
+{#        /* ===== ALERTS ===== */#}
+{#        .alert {#}
 {#            border: none;#}
+{#            border-radius: 16px;#}
+{#            padding: 1.2rem 1.5rem;#}
+{#            margin-bottom: 1.5rem;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);#}
+{#        }#}
+{#        #}
+{#        .alert::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            left: 0;#}
+{#            top: 0;#}
+{#            height: 100%;#}
+{#            width: 5px;#}
+{#        }#}
+{#        #}
+{#        .alert-success {#}
+{#            background: #F2FBF6;#}
+{#            color: var(--success);#}
+{#        }#}
+{#        #}
+{#        .alert-success::before {#}
+{#            background: var(--success);#}
+{#        }#}
+{#        #}
+{#        .alert-danger {#}
+{#            background: #FFF2F4;#}
+{#            color: var(--danger);#}
+{#        }#}
+{#        #}
+{#        .alert-danger::before {#}
+{#            background: var(--danger);#}
+{#        }#}
+{#        #}
+{#        .alert-warning {#}
+{#            background: #FFF8EE;#}
+{#            color: var(--warning);#}
+{#        }#}
+{#        #}
+{#        .alert-warning::before {#}
+{#            background: var(--warning);#}
+{#        }#}
+{#        #}
+{#        .alert-info {#}
+{#            background: #F0F9FF;#}
+{#            color: var(--accent);#}
+{#        }#}
+{#        #}
+{#        .alert-info::before {#}
+{#            background: var(--accent);#}
+{#        }#}
+{#        #}
+{#        .btn-close {#}
+{#            color: currentColor;#}
+{#            opacity: 0.7;#}
+{#        }#}
+{#        #}
+{#        .btn-close:hover {#}
+{#            opacity: 1;#}
+{#        }#}
+{##}
+{#        /* ===== BUTTONS ===== */#}
+{#        .btn {#}
+{#            font-weight: 600;#}
+{#            padding: 0.7rem 1.5rem;#}
+{#            border-radius: 12px;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#            z-index: 1;#}
+{#            transition: all 0.3s ease;#}
+{#            border: none;#}
+{#            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{#        #}
+{#        .btn::after {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            bottom: -50%;#}
+{#            left: -25%;#}
+{#            width: 150%;#}
+{#            height: 200%;#}
+{#            background: rgba(255, 255, 255, 0.1);#}
+{#            border-radius: 50%;#}
+{#            z-index: -1;#}
+{#            transition: all 0.5s ease;#}
+{#            transform: scale(0);#}
+{#        }#}
+{#        #}
+{#        .btn:hover::after {#}
+{#            transform: scale(1);#}
+{#        }#}
+{#        #}
+{#        .btn:hover {#}
+{#            transform: translateY(-3px);#}
+{#            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);#}
+{#        }#}
+{#        #}
+{#        .btn-primary {#}
+{#            background: var(--accent);#}
+{#            color: var(--primary);#}
+{#        }#}
+{#        #}
+{#        .btn-secondary {#}
+{#            background: var(--secondary);#}
+{#            color: white;#}
+{#        }#}
+{#        #}
+{#        .btn-info {#}
+{#            background: var(--success);#}
+{#            color: white;#}
+{#        }#}
+{#        #}
+{#        .btn-success {#}
+{#            background: var(--success);#}
+{#            color: white;#}
+{#        }#}
+{#        #}
+{#        .btn-danger {#}
+{#            background: var(--danger);#}
+{#            color: white;#}
+{#        }#}
+{#        #}
+{#        .btn-warning {#}
+{#            background: var(--warning);#}
+{#            color: white;#}
+{#        }#}
+{#        #}
+{#        /* ===== CARDS ===== */#}
+{#        .card {#}
+{#            border: none;#}
+{#            border-radius: 16px;#}
+{#            overflow: hidden;#}
+{#            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);#}
+{#        }#}
+{#        #}
+{#        .card-header {#}
+{#            background-color: var(--primary);#}
+{#            color: white;#}
+{#            border-bottom: none;#}
+{#            padding: 1.25rem 1.5rem;#}
+{#            position: relative;#}
 {#            overflow: hidden;#}
 {#        }#}
-{##}
-{#        .shadow-custom {#}
-{#            box-shadow: 0 6px 16px rgba(0,0,0,0.1);#}
+{#        #}
+{#        .card-header::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            top: -15px;#}
+{#            right: -15px;#}
+{#            width: 60px;#}
+{#            height: 60px;#}
+{#            background-color: var(--accent);#}
+{#            border-radius: 50%;#}
+{#            opacity: 0.2;#}
 {#        }#}
-{##}
-{#        .alert {#}
-{#            border-radius: 12px;#}
-{#            border: none;#}
-{#            padding: 1rem 1.5rem;#}
+{#        #}
+{#        .card-body {#}
+{#            padding: 1.5rem;#}
 {#        }#}
-{##}
-{#        .alert-success {#}
-{#            background-color: #E8F5E9;#}
-{#            color: var(--success-color);#}
-{#        }#}
-{##}
-{#        .alert-danger {#}
-{#            background-color: #FFEBEE;#}
-{#            color: var(--danger-color);#}
-{#        }#}
-{##}
-{#        .alert-warning {#}
-{#            background-color: #FFF3E0;#}
-{#            color: var(--warning-color);#}
-{#        }#}
-{##}
-{#        .alert-info {#}
-{#            background-color: #E3F2FD;#}
-{#            color: var(--primary-color);#}
+{#        #}
+{#        /* ===== RESPONSIVE FIXES ===== */#}
+{#        @media (max-width: 992px) {#}
+{#            .navbar-collapse {#}
+{#                background: rgba(34, 40, 49, 0.97);#}
+{#                border-radius: 16px;#}
+{#                padding: 1rem;#}
+{#                margin-top: 1rem;#}
+{#                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);#}
+{#            }#}
+{#            #}
+{#            .nav-link {#}
+{#                margin-bottom: 0.5rem;#}
+{#            }#}
 {#        }#}
 {#    </style>#}
 {#    {% block extra_css %}{% endblock %}#}
@@ -174,7 +341,7 @@
 {#    <nav class="navbar navbar-expand-lg">#}
 {#        <div class="container-fluid px-4">#}
 {#            <a class="navbar-brand" href="{% url 'payments:company-list' %}">#}
-{#                <span class="brand-icon">#}
+{#                <span class="brand-icon-wrapper">#}
 {#                    <i class="fas fa-credit-card"></i>#}
 {#                </span>#}
 {#                To'lov Tizimi#}
@@ -214,7 +381,7 @@
 {#        {% if messages %}#}
 {#            <div class="container-fluid px-4 mb-4">#}
 {#                {% for message in messages %}#}
-{#                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-custom" role="alert">#}
+{#                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">#}
 {#                        {{ message }}#}
 {#                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>#}
 {#                    </div>#}
@@ -230,7 +397,6 @@
 {#    {% block extra_js %}{% endblock %}#}
 {#</body>#}
 {#</html>#}
-
 
 <!DOCTYPE html>
 <html lang="uz">
@@ -266,6 +432,12 @@
             background-attachment: fixed;
             min-height: 100vh;
             color: var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
         }
 
         /* ===== NAVBAR STYLES ===== */
@@ -551,6 +723,33 @@
             padding: 1.5rem;
         }
         
+        /* ===== FOOTER ===== */
+        footer.footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: var(--primary);
+            color: var(--light);
+            border-top: 3px solid var(--accent);
+            width: 100%;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer.footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        footer.footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        footer.footer a:hover {
+            color: #ffc840;
+            text-decoration: underline;
+        }
+        
         /* ===== RESPONSIVE FIXES ===== */
         @media (max-width: 992px) {
             .navbar-collapse {
@@ -569,60 +768,68 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand" href="{% url 'payments:company-list' %}">
-                <span class="brand-icon-wrapper">
-                    <i class="fas fa-credit-card"></i>
-                </span>
-                To'lov Tizimi
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'company-list' %}active{% endif %}" 
-                           href="{% url 'payments:company-list' %}">
-                            <i class="fas fa-building"></i>
-                            Kompaniyalar
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'payments:add-company' %}">
-                            <i class="fas fa-plus-circle"></i>
-                            Kompaniya Qo'shish
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'payments:all-companies-payments' %}">
-                             <i class="fas fa-money-bill-wave"></i>
-                             Barcha To'lovlar
-                        </a>
-                    </li>
-                </ul>
+    <div class="content-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" href="{% url 'payments:company-list' %}">
+                    <span class="brand-icon-wrapper">
+                        <i class="fas fa-credit-card"></i>
+                    </span>
+                    To'lov Tizimi
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'company-list' %}active{% endif %}" 
+                               href="{% url 'payments:company-list' %}">
+                                <i class="fas fa-building"></i>
+                                Kompaniyalar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'payments:add-company' %}">
+                                <i class="fas fa-plus-circle"></i>
+                                Kompaniya Qo'shish
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'payments:all-companies-payments' %}">
+                                 <i class="fas fa-money-bill-wave"></i>
+                                 Barcha To'lovlar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            {% if messages %}
+                <div class="container-fluid px-4 mb-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        {% if messages %}
-            <div class="container-fluid px-4 mb-4">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {% block content %}{% endblock %}
     </div>
+
+    <!-- Footer with Copyright and Telegram Link -->
+    <footer class="footer">
+        <p>© 2025 Temurmalik Kudratov. Barcha huquqlar himoyalangan.</p>
+        <p>Telegram orqali bog'lanish: <a href="https://t.me/Everest_evo" target="_blank">@Everest_evo</a></p>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
