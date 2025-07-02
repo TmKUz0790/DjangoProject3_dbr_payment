@@ -772,8 +772,7 @@
                         <th style="padding:0.8rem;">Jami Shartnoma</th>
                         <th style="padding:0.8rem;">Jami To'langan</th>
                         <th style="padding:0.8rem;">Joriy Qarz</th>
-                        <th style="padding:0.8rem;">Manzil</th>
-                        <th style="padding:0.8rem;">Email</th>
+
                         <th style="padding:0.8rem; text-align: center;">Amallar</th>
                     </tr>
                 </thead>
@@ -791,8 +790,7 @@
                                 <span class="not-due">${{ company_info.current_due|intcomma }}</span>
                             {% endif %}
                         </td>
-                        <td style="padding:0.7rem 0.5rem;">{{ company_info.company.address|default:'-' }}</td>
-                        <td style="padding:0.7rem 0.5rem;">{{ company_info.company.email|default:'-' }}</td>
+
                         <td style="padding:0.7rem 0.5rem; min-width:180px; text-align: center;">
                             <a href="{% url 'payments:company-detail' company_info.company.pk %}" class="btn-custom btn-details" style="margin-bottom:2px; font-size:0.95rem; padding:0.4rem 0.7rem;">
                                 <i class="fas fa-info-circle"></i>
